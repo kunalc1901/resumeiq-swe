@@ -1,0 +1,64 @@
+<div class="dash-page">
+  <app-page-header
+    title="Skill Gap Analysis"
+    subtitle="Understand which skills could strengthen your profile."
+  ></app-page-header>
+
+  <ng-container *ngIf="data">
+    <div class="skills-compare-grid">
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Your Skills</h2>
+            <p class="card-sub">Detected from your resume.</p>
+          </div>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="check" [size]="16" />
+          </span>
+        </div>
+        <div class="skill-tags">
+          <span class="tag tag-accent" *ngFor="let skill of data.yourSkills">{{ skill }}</span>
+        </div>
+      </div>
+
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Target Role Skills</h2>
+            <p class="card-sub">Skills identified from your selected target role.</p>
+          </div>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="trending-up" [size]="16" />
+          </span>
+        </div>
+        <div class="skill-tags">
+          <span class="tag tag-info" *ngFor="let skill of data.targetSkills">{{ skill }}</span>
+        </div>
+      </div>
+    </div>
+
+    <section class="dash-section">
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Skill Gap</h2>
+            <p class="card-sub">
+              Coverage level reflects how strongly each skill appears in your resume.
+            </p>
+          </div>
+        </div>
+
+        <div class="gap-list">
+          <div class="gap-item" *ngFor="let gap of data.gaps">
+            <div class="gap-head">
+              <span class="gap-skill">{{ gap.skill }}</span>
+              <span class="gap-level">{{ gap.level }}% coverage</span>
+            </div>
+            <app-progress-bar [value]="gap.level" [showValue]="false" [ariaLabel]="gap.skill + ' coverage'" />
+            <p class="gap-note">{{ gap.note }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+</div>

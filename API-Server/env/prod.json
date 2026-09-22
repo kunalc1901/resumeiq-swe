@@ -1,0 +1,11 @@
+{
+  "database": {
+    "name": "resume_iq",
+    "host": "localhost",
+    "port": 27017,
+    "srvRecord": false
+  },
+  "logging": {
+    "level": "info"
+  }
+}

@@ -1,0 +1,9 @@
+<div class="home-page">
+  <h1>Welcome, {{ user?.first_name || user?.email }}</h1>
+  <p>You have successfully logged in to the Square starter app.</p>
+  <p>
+    This page is protected by the <code>AuthGuard</code> and reached through the
+    authenticated API endpoint <code>/user</code>.
+  </p>
+  <button class="btn btn-secondary" (click)="logout()">Logout</button>
+</div>

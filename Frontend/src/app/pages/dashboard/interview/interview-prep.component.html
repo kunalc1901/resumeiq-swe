@@ -1,0 +1,185 @@
+<div class="dash-page">
+  <app-page-header
+    title="Interview Preparation"
+    subtitle="Practice questions based on your actual resume and target role."
+  ></app-page-header>
+
+  <!-- Setup -->
+  <div class="setup-card dash-card dash-card-pad" *ngIf="phase === 'setup'">
+    <div class="form-field">
+      <span class="form-label">Interview type</span>
+      <div class="chip-group">
+        <button
+          type="button"
+          class="chip"
+          [class.chip-active]="selectedType === type"
+          *ngFor="let type of interviewTypes"
+          (click)="selectedType = type"
+        >
+          {{ type }}
+        </button>
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label class="form-label" for="target-role">Target role</label>
+      <input
+        id="target-role"
+        class="form-input"
+        type="text"
+        placeholder="e.g. Full Stack Developer"
+        [(ngModel)]="targetRole"
+      />
+    </div>
+
+    <div class="form-field">
+      <span class="form-label">Difficulty</span>
+      <div class="chip-group">
+        <button
+          type="button"
+          class="chip"
+          [class.chip-active]="selectedDifficulty === difficulty"
+          *ngFor="let difficulty of difficulties"
+          (click)="selectedDifficulty = difficulty"
+        >
+          {{ difficulty }}
+        </button>
+      </div>
+    </div>
+
+    <div class="setup-actions">
+      <button type="button" class="btn btn-primary btn-lg" (click)="startInterview()">
+        Start Interview
+        <app-icon name="arrow-right" [size]="16" />
+      </button>
+      <span class="coming-soon-badge">AI evaluation coming soon</span>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="dash-section" *ngIf="phase === 'setup'">
+    <app-empty-state
+      icon="mic"
+      title="No interview sessions yet"
+      text="Start a personalized interview based on your resume."
+    ></app-empty-state>
+  </div>
+
+  <!-- Interview mode -->
+  <ng-container *ngIf="phase !== 'setup'">
+    <div class="interview-card dash-card">
+      <div class="interview-top">
+        <div class="interview-meta">
+          <span class="tag tag-accent">{{ selectedType }}</span>
+          <span class="tag">{{ selectedDifficulty }}</span>
+          <span class="tag">{{ targetRole }}</span>
+        </div>
+        <button type="button" class="btn btn-ghost btn-sm" (click)="reset()">
+          End Session
+        </button>
+      </div>
+
+      <div class="interview-progress">
+        <div class="interview-progress-head">
+          <span class="section-label">Question {{ currentIndex + 1 }} of {{ totalQuestions }}</span>
+          <span class="interview-progress-pct">
+            {{ ((currentIndex + 1) / totalQuestions) * 100 | number: '1.0-0' }}%
+          </span>
+        </div>
+        <app-progress-bar
+          [value]="((currentIndex + 1) / totalQuestions) * 100"
+          [showValue]="false"
+        />
+      </div>
+
+      <ng-container *ngIf="currentQuestion">
+        <div class="question-block" *ngIf="phase === 'intro'">
+          <span class="section-label">Question {{ questionNumber }}</span>
+          <p class="question-text">{{ currentQuestion.prompt }}</p>
+          <button type="button" class="btn btn-primary" (click)="startAnswering()">
+            Start Answering
+          </button>
+        </div>
+
+        <div class="answer-block" *ngIf="phase === 'answering'">
+          <span class="section-label">Your Answer</span>
+          <textarea
+            class="form-textarea"
+            rows="6"
+            placeholder="Type your answer here..."
+            [(ngModel)]="answer"
+          ></textarea>
+          <div class="answer-actions">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="submitAnswer()"
+              [disabled]="!answer.trim()"
+            >
+              Submit Answer
+            </button>
+          </div>
+        </div>
+
+        <div class="evaluating" *ngIf="phase === 'evaluating' && evaluating">
+          <div class="typing-dots" aria-label="Evaluating your answer">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="evaluating-label">Evaluating your answer...</span>
+        </div>
+
+        <div class="evaluation" *ngIf="phase === 'evaluating' && evaluation">
+          <div class="evaluation-head">
+            <h3 class="card-title">AI Evaluation</h3>
+            <span class="coming-soon-badge">Sample evaluation</span>
+          </div>
+
+          <div class="eval-section">
+            <div class="eval-title good">
+              <app-icon name="check" [size]="16" />
+              Strengths
+            </div>
+            <ul class="eval-list">
+              <li *ngFor="let s of evaluation.strengths">{{ s }}</li>
+            </ul>
+          </div>
+
+          <div class="eval-section">
+            <div class="eval-title warn">
+              <app-icon name="alert-triangle" [size]="16" />
+              Weaknesses
+            </div>
+            <ul class="eval-list">
+              <li *ngFor="let w of evaluation.weaknesses">{{ w }}</li>
+            </ul>
+          </div>
+
+          <div class="eval-section">
+            <div class="eval-title accent">
+              <app-icon name="lightbulb" [size]="16" />
+              Suggested Answer
+            </div>
+            <p class="eval-text">{{ evaluation.suggestedAnswer }}</p>
+          </div>
+
+          <div class="eval-section">
+            <div class="eval-title">
+              <app-icon name="message-circle" [size]="16" />
+              Follow-up Question
+            </div>
+            <p class="eval-text">{{ evaluation.followUp }}</p>
+          </div>
+
+          <div class="eval-actions">
+            <button type="button" class="btn btn-primary" (click)="nextQuestion()">
+              Next Question
+            </button>
+            <button type="button" class="btn btn-ghost" (click)="reset()">End Session</button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

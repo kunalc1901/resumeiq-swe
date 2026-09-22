@@ -1,0 +1,44 @@
+<section class="features" id="features">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <h2 class="section-title">Everything you need to understand and improve your resume.</h2>
+      <p class="section-sub">
+        From resume analysis to interview preparation, ResumeIQ turns your resume
+        into actionable insights.
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <article class="feature-card" *ngFor="let feature of features; let i = index"
+        appReveal [style.--reveal-delay]="i * 80 + 'ms'">
+        <div class="feature-icon" aria-hidden="true">
+          <ng-container [ngSwitch]="feature.icon">
+            <svg *ngSwitchCase="'document'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+              <path d="M14 3v6h6" />
+              <path d="M9 13h6M9 17h6" />
+            </svg>
+            <svg *ngSwitchCase="'target'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9" />
+              <circle cx="12" cy="12" r="5" />
+              <circle cx="12" cy="12" r="1" />
+            </svg>
+            <svg *ngSwitchCase="'message'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            </svg>
+            <svg *ngSwitchCase="'sparkles'" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
+              <path d="M6.3 6.3l2.1 2.1M15.6 15.6l2.1 2.1M17.7 6.3l-2.1 2.1M8.4 15.6l-2.1 2.1" />
+            </svg>
+          </ng-container>
+        </div>
+        <h3 class="feature-title">{{ feature.title }}</h3>
+        <p class="feature-desc">{{ feature.description }}</p>
+      </article>
+    </div>
+  </div>
+</section>

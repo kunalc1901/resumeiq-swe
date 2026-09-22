@@ -1,0 +1,98 @@
+<section class="job-matching" id="job-matching">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <h2 class="section-title">
+        Know How Well You Match <span class="grad-text">Before You Apply.</span>
+      </h2>
+      <p class="section-sub">
+        Compare your resume with a job description and see where your experience
+        aligns &mdash; and where you may need to improve.
+      </p>
+    </div>
+
+    <div class="jm-layout">
+      <div class="jm-flow" appReveal>
+        <div class="jm-sources">
+          <div class="source-card">
+            <span class="source-label">Your Resume</span>
+            <span class="source-file">John_Doe_Resume.pdf</span>
+          </div>
+          <div class="source-plus" aria-hidden="true">+</div>
+          <div class="source-card">
+            <span class="source-label">Job Description</span>
+            <span class="source-file">Senior_Software_Engineer.md</span>
+          </div>
+        </div>
+
+        <div class="jm-arrow" aria-hidden="true">&darr;</div>
+
+        <div class="jm-ai">
+          <span class="jm-ai-dot" aria-hidden="true"></span>
+          ResumeIQ AI
+        </div>
+
+        <div class="jm-arrow" aria-hidden="true">&darr;</div>
+
+        <div class="jm-match-label">Match Analysis</div>
+      </div>
+
+      <div class="jm-result" appReveal [style.--reveal-delay]="'120ms'">
+        <div class="result-score">
+          <div class="score-ring" aria-hidden="true">
+            <svg viewBox="0 0 120 120">
+              <defs>
+                <linearGradient id="matchScoreGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#6366f1" />
+                  <stop offset="1" stop-color="#38bdf8" />
+                </linearGradient>
+              </defs>
+              <circle class="ring-bg" cx="60" cy="60" r="52" />
+              <circle
+                class="ring-fg"
+                cx="60"
+                cy="60"
+                r="52"
+                stroke="url(#matchScoreGrad)"
+              />
+            </svg>
+            <div class="score-value">
+              <strong>82</strong>
+              <span>%</span>
+            </div>
+          </div>
+          <div>
+            <div class="result-score-label">Match Score</div>
+            <div class="result-score-note">Based on a sample resume vs. job description</div>
+          </div>
+        </div>
+
+        <div class="result-cols">
+          <div class="result-col">
+            <div class="result-col-title good">Strong Match</div>
+            <ul class="match-list">
+              <li><span class="check" aria-hidden="true">&#10003;</span>React</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span>Node.js</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span>MongoDB</li>
+              <li><span class="check" aria-hidden="true">&#10003;</span>REST APIs</li>
+            </ul>
+          </div>
+          <div class="result-col">
+            <div class="result-col-title warn">Missing / Weak Areas</div>
+            <ul class="match-list">
+              <li><span class="warn-icon" aria-hidden="true">&#9888;</span>AWS</li>
+              <li><span class="warn-icon" aria-hidden="true">&#9888;</span>Docker</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-label">Key Insight</div>
+          <p>
+            &ldquo;Your backend experience aligns strongly with this role, but your
+            resume could highlight cloud and deployment experience more clearly.&rdquo;
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

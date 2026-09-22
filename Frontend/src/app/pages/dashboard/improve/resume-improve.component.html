@@ -1,0 +1,94 @@
+<div class="dash-page">
+  <app-page-header
+    title="Improve Your Resume"
+    subtitle="Turn AI insights into stronger resume content."
+  ></app-page-header>
+
+  <ng-container *ngIf="data">
+    <div class="improve-note dash-card dash-card-pad">
+      <app-icon name="info" [size]="18" />
+      <p>
+        Suggestions stay grounded in your resume — no invented achievements, metrics
+        or responsibilities.
+      </p>
+    </div>
+
+    <!-- Summary -->
+    <section class="dash-section">
+      <app-collapsible-section title="Summary" icon="layers" [open]="true">
+        <div class="compare-grid">
+          <div class="compare-card">
+            <span class="compare-label">Current</span>
+            <p class="compare-text">{{ data.summary.current }}</p>
+          </div>
+          <div class="compare-arrow" aria-hidden="true">
+            <app-icon name="arrow-right" [size]="18" />
+          </div>
+          <div class="compare-card suggested">
+            <span class="compare-label">AI Suggestion</span>
+            <p class="compare-text">{{ data.summary.suggested }}</p>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Experience -->
+    <section class="dash-section">
+      <app-collapsible-section title="Experience" icon="briefcase" [open]="false">
+        <div class="pair-list">
+          <div class="pair dash-card dash-card-pad" *ngFor="let pair of data.experience">
+            <div class="pair-row">
+              <div class="compare-card">
+                <span class="compare-label">Current</span>
+                <p class="compare-text">{{ pair.current }}</p>
+              </div>
+              <div class="compare-card suggested">
+                <span class="compare-label">AI Suggestion</span>
+                <p class="compare-text">{{ pair.suggested }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Projects -->
+    <section class="dash-section">
+      <app-collapsible-section title="Projects" icon="folder" [open]="false">
+        <div class="pair-list">
+          <div class="pair dash-card dash-card-pad" *ngFor="let pair of data.projects">
+            <div class="pair-row">
+              <div class="compare-card">
+                <span class="compare-label">Current</span>
+                <p class="compare-text">{{ pair.current }}</p>
+              </div>
+              <div class="compare-card suggested">
+                <span class="compare-label">AI Suggestion</span>
+                <p class="compare-text">{{ pair.suggested }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Skills -->
+    <section class="dash-section">
+      <app-collapsible-section title="Skills" icon="code" [open]="false">
+        <div class="compare-grid">
+          <div class="compare-card">
+            <span class="compare-label">Current organization</span>
+            <p class="compare-text">{{ data.skills.current }}</p>
+          </div>
+          <div class="compare-arrow" aria-hidden="true">
+            <app-icon name="arrow-right" [size]="18" />
+          </div>
+          <div class="compare-card suggested">
+            <span class="compare-label">Suggested organization</span>
+            <p class="compare-text">{{ data.skills.suggested }}</p>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+  </ng-container>
+</div>

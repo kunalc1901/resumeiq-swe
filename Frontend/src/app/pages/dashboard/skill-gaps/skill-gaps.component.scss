@@ -1,0 +1,51 @@
+.skills-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.gap-list {
+  display: grid;
+  gap: 18px;
+}
+
+.gap-item {
+  display: grid;
+  gap: 8px;
+}
+
+.gap-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.gap-skill {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.gap-level {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.gap-note {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .skills-compare-grid {
+    grid-template-columns: 1fr;
+  }
+}

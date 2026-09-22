@@ -1,0 +1,39 @@
+<section class="interview-prep" id="interview-prep">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <span class="coming-soon-badge">Coming Soon</span>
+      <h2 class="section-title">
+        Your Resume Can Become Your <span class="grad-text">Interview Coach.</span>
+      </h2>
+      <p class="section-sub">
+        ResumeIQ can generate personalized questions based on the projects,
+        technologies and experience mentioned in your resume.
+      </p>
+    </div>
+
+    <div class="chat-mock" appReveal>
+      <div class="chat-topbar">
+        <div class="chat-brand">ResumeIQ</div>
+        <div class="chat-status">Question 01</div>
+      </div>
+      <div class="chat-body">
+        <p class="chat-question">
+          You mentioned building a REST API using Node.js. How did you handle
+          authentication and authorization?
+        </p>
+        <div class="chat-answer" role="presentation">
+          <span>Your Answer</span>
+        </div>
+        <button type="button" class="btn btn-ghost btn-block" disabled>
+          Evaluate Answer
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+        <span class="coming-soon-note">Evaluation coming soon</span>
+      </div>
+    </div>
+
+    <ul class="question-tags" appReveal [style.--reveal-delay]="'120ms'">
+      <li *ngFor="let tag of questionTags">{{ tag }}</li>
+    </ul>
+  </div>
+</section>

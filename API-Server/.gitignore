@@ -1,0 +1,22 @@
+# Node
+/node_modules
+
+# Jest coverage output
+/coverage
+/coverage-integration
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System files
+.DS_Store
+Thumbs.db
+
+.serverless
+.env-*
+
+sq-*.log

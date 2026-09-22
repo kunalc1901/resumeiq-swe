@@ -1,0 +1,82 @@
+.analyze-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.analyze-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 20px 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.brand-mark {
+  display: inline-flex;
+}
+
+.brand-name {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.nav-login {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition: color 0.18s ease;
+}
+
+.nav-login:hover {
+  color: var(--text-primary);
+}
+
+.analyze-main {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 48px 24px 96px;
+}
+
+.analyze-card {
+  max-width: 520px;
+  width: 100%;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 56px 40px;
+  box-shadow: 0 30px 60px -24px rgba(0, 0, 0, 0.55);
+}
+
+.analyze-card h1 {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  letter-spacing: -0.02em;
+  margin: 20px 0 12px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.analyze-card p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0 0 28px;
+}

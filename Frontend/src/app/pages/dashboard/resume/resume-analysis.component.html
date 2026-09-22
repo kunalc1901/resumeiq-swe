@@ -1,0 +1,200 @@
+<div class="dash-page">
+  <ng-container *ngIf="analysis; else noResume">
+    <app-page-header
+      title="Resume Analysis"
+      subtitle="Understand what your resume says about you."
+    >
+      <ng-container slot="actions">
+        <a routerLink="/dashboard/resume" class="btn btn-ghost">
+          <app-icon name="refresh" [size]="16" />
+          Analyze Again
+        </a>
+      </ng-container>
+    </app-page-header>
+
+    <!-- Scores -->
+    <div class="scores-grid">
+      <div class="score-hero dash-card">
+        <div class="score-hero-main">
+          <app-score-ring [value]="analysis.overallScore" [size]="132">
+            <div class="hero-ring-value">
+              <strong>{{ analysis.overallScore }}</strong>
+              <span>/100</span>
+            </div>
+          </app-score-ring>
+          <div class="score-hero-meta">
+            <span class="section-label">Overall Score</span>
+            <p class="score-hero-note">
+              A balanced view of structure, relevance and content strength across your resume.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="ats-card dash-card dash-card-pad">
+        <span class="section-label">ATS Compatibility</span>
+        <div class="ats-value">{{ analysis.atsScore }}%</div>
+        <app-progress-bar [value]="analysis.atsScore" [showValue]="false" />
+        <p class="ats-note">
+          AI-powered ATS insights based on keyword coverage and standard section formatting.
+        </p>
+      </div>
+    </div>
+
+    <!-- Summary -->
+    <section class="dash-section">
+      <app-collapsible-section title="Summary" icon="layers" [open]="true">
+        <p class="summary-text">{{ analysis.summary }}</p>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Skills -->
+    <section class="dash-section">
+      <app-collapsible-section title="Skills" icon="code" [open]="true">
+        <div class="skills-groups">
+          <div class="skill-group" *ngFor="let group of analysis.skills">
+            <div class="skill-group-name">{{ group.group }}</div>
+            <div class="skill-tags">
+              <span class="tag tag-accent" *ngFor="let skill of group.skills">{{ skill }}</span>
+            </div>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Experience -->
+    <section class="dash-section">
+      <app-collapsible-section title="Experience" icon="briefcase" [open]="false">
+        <div class="timeline">
+          <div class="timeline-item" *ngFor="let exp of analysis.experience">
+            <div class="timeline-dot" aria-hidden="true"></div>
+            <div class="timeline-card dash-card dash-card-pad">
+              <div class="timeline-head">
+                <div>
+                  <div class="timeline-role">{{ exp.role }}</div>
+                  <div class="timeline-company">{{ exp.company }} · {{ exp.period }}</div>
+                </div>
+              </div>
+              <ul class="timeline-points">
+                <li *ngFor="let point of exp.points">{{ point }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Projects -->
+    <section class="dash-section">
+      <app-collapsible-section title="Projects" icon="folder" [open]="false">
+        <div class="projects-grid card-grid card-grid-3">
+          <article class="project-card dash-card dash-card-pad dash-card-hover" *ngFor="let project of analysis.projects">
+            <h3 class="project-name">{{ project.name }}</h3>
+            <p class="project-desc">{{ project.description }}</p>
+            <div class="project-stack">
+              <span class="tag" *ngFor="let tech of project.stack">{{ tech }}</span>
+            </div>
+          </article>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Education -->
+    <section class="dash-section">
+      <app-collapsible-section title="Education" icon="graduation-cap" [open]="false">
+        <div class="education-list">
+          <div class="education-item dash-card dash-card-pad" *ngFor="let edu of analysis.education">
+            <div class="education-degree">{{ edu.degree }}</div>
+            <div class="education-school">{{ edu.institution }} · {{ edu.period }}</div>
+          </div>
+        </div>
+      </app-collapsible-section>
+    </section>
+
+    <!-- Strengths & improvement -->
+    <div class="two-col dash-section">
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Strengths</h2>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="check" [size]="16" />
+          </span>
+        </div>
+        <ul class="check-list">
+          <li *ngFor="let item of analysis.strengths">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Areas to Improve</h2>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="alert-triangle" [size]="16" />
+          </span>
+        </div>
+        <ul class="warn-list">
+          <li *ngFor="let item of analysis.areasToImprove">{{ item }}</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Missing keywords -->
+    <section class="dash-section">
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Missing Keywords</h2>
+            <p class="card-sub">Keywords that commonly appear in similar roles.</p>
+          </div>
+        </div>
+        <div class="keyword-tags">
+          <span class="tag tag-warn" *ngFor="let keyword of analysis.missingKeywords">
+            {{ keyword }}
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Improvement suggestions -->
+    <section class="dash-section">
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Improvement Suggestions</h2>
+            <p class="card-sub">Prioritized recommendations grounded in your resume.</p>
+          </div>
+        </div>
+        <div class="suggestion-list">
+          <div class="suggestion" *ngFor="let suggestion of analysis.improvementSuggestions">
+            <span
+              class="tag"
+              [class.tag-accent]="suggestion.priority === 'high'"
+              [class.tag-info]="suggestion.priority === 'medium'"
+              [class.tag-warn]="suggestion.priority === 'low'"
+            >
+              {{ suggestion.priority }} priority
+            </span>
+            <div>
+              <div class="suggestion-title">{{ suggestion.title }}</div>
+              <p class="suggestion-desc">{{ suggestion.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+  <ng-template #noResume>
+    <app-page-header title="Resume Analysis" subtitle="Understand what your resume says about you."></app-page-header>
+    <app-empty-state
+      icon="file-text"
+      title="No resume analyzed yet"
+      text="Upload your resume to unlock personalized AI-powered insights."
+    >
+      <a routerLink="/dashboard/resume" class="btn btn-primary">
+        <app-icon name="upload" [size]="16" />
+        Upload Resume
+      </a>
+    </app-empty-state>
+  </ng-template>
+</div>

@@ -1,0 +1,117 @@
+<section class="hero">
+  <div class="container hero-grid">
+    <div class="hero-copy" appReveal>
+      <div class="hero-badge">
+        <span class="badge-star" aria-hidden="true">&#10022;</span>
+        AI-Powered Resume Intelligence
+      </div>
+
+      <h1 class="hero-title">
+        Turn Your Resume Into Your
+        <span class="grad-text">Competitive Advantage.</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        ResumeIQ uses AI to analyze your resume, uncover skill gaps, improve your
+        profile, and help you prepare for your next opportunity.
+      </p>
+
+      <div class="hero-actions">
+        <a routerLink="/dashboard" class="btn btn-primary btn-lg">
+          Analyze My Resume
+          <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+        <a href="#how-it-works" class="btn btn-ghost btn-lg">See How It Works</a>
+      </div>
+
+      <p class="hero-trust">
+        Built to understand your resume &mdash; not just scan it.
+      </p>
+    </div>
+
+    <div class="hero-visual" appReveal [style.--reveal-delay]="'120ms'">
+      <div class="hero-visual-glow" aria-hidden="true"></div>
+
+      <div class="dashboard-card">
+        <div class="dash-header">
+          <div class="dash-title">
+            <span class="dash-dot" aria-hidden="true"></span>
+            Resume Analysis
+          </div>
+          <span class="dash-live">Live Preview</span>
+        </div>
+
+        <div class="dash-candidate">
+          <div class="avatar" aria-hidden="true">JD</div>
+          <div>
+            <div class="candidate-name">John Doe</div>
+            <div class="candidate-role">Software Engineer</div>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="score-card">
+            <div class="score-ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120">
+                <defs>
+                  <linearGradient id="heroScoreGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#6366f1" />
+                    <stop offset="1" stop-color="#38bdf8" />
+                  </linearGradient>
+                </defs>
+                <circle class="ring-bg" cx="60" cy="60" r="52" />
+                <circle
+                  class="ring-fg"
+                  cx="60"
+                  cy="60"
+                  r="52"
+                  stroke="url(#heroScoreGrad)"
+                />
+              </svg>
+              <div class="score-value">
+                <strong>82</strong>
+                <span>/100</span>
+              </div>
+            </div>
+            <div class="score-label">Overall Score</div>
+          </div>
+
+          <div class="ats-card">
+            <div class="ats-head">
+              <span>ATS Compatibility</span>
+              <strong>78%</strong>
+            </div>
+            <div class="progress" role="presentation">
+              <span class="progress-fill"></span>
+            </div>
+            <ul class="skill-chips" aria-label="Detected skills">
+              <li>React</li>
+              <li>Node.js</li>
+              <li>MongoDB</li>
+              <li>Python</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="dash-lists">
+          <div class="list-block">
+            <div class="list-title">Strengths</div>
+            <ul class="list good">
+              <li>Strong technical foundation</li>
+              <li>Relevant project experience</li>
+              <li>Good backend experience</li>
+            </ul>
+          </div>
+          <div class="list-block">
+            <div class="list-title">Areas to Improve</div>
+            <ul class="list warn">
+              <li>Add measurable achievements</li>
+              <li>Strengthen cloud experience</li>
+              <li>Improve keyword coverage</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

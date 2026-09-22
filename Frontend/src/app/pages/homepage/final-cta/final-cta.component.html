@@ -1,0 +1,29 @@
+<section class="technology">
+  <div class="container">
+    <div class="section-head" appReveal>
+      <h2 class="section-title">Built with modern AI technology.</h2>
+      <p class="section-sub">The intelligence behind your resume insights.</p>
+    </div>
+
+    <ul class="tech-badges" appReveal>
+      <li *ngFor="let badge of techBadges">
+        <span class="tech-badge-dot" aria-hidden="true"></span>
+        {{ badge }}
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="container">
+    <div class="cta-card" appReveal>
+      <div class="cta-glow" aria-hidden="true"></div>
+      <h2 class="cta-title">Ready to see what your resume is really saying?</h2>
+      <p class="cta-sub">Upload your resume and get actionable AI-powered insights in minutes.</p>
+      <a routerLink="/dashboard" class="btn btn-primary btn-lg">
+        Analyze My Resume
+        <span aria-hidden="true">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</section>

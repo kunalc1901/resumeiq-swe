@@ -1,0 +1,61 @@
+<div class="dash-page">
+  <app-page-header title="Profile" subtitle="Manage your profile and preferences."></app-page-header>
+
+  <div class="profile-layout">
+    <div class="profile-avatar-card dash-card dash-card-pad">
+      <span class="avatar avatar-lg" aria-hidden="true">{{ avatar }}</span>
+      <div class="avatar-name">{{ form.firstName }} {{ form.lastName }}</div>
+      <div class="avatar-email">{{ form.email }}</div>
+      <button type="button" class="btn btn-ghost btn-sm">
+        <app-icon name="upload" [size]="15" />
+        Change Photo
+      </button>
+    </div>
+
+    <form class="profile-form dash-card dash-card-pad" (ngSubmit)="save()">
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="first-name">First Name</label>
+          <input id="first-name" class="form-input" type="text" [(ngModel)]="form.firstName" name="firstName" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="last-name">Last Name</label>
+          <input id="last-name" class="form-input" type="text" [(ngModel)]="form.lastName" name="lastName" />
+        </div>
+      </div>
+
+      <div class="form-field">
+        <label class="form-label" for="profile-email">Email</label>
+        <input id="profile-email" class="form-input" type="email" [(ngModel)]="form.email" name="email" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label" for="target-role">Target Role</label>
+          <input id="target-role" class="form-input" type="text" [(ngModel)]="form.targetRole" name="targetRole" />
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="experience-level">Experience Level</label>
+          <select id="experience-level" class="form-select" [(ngModel)]="form.experienceLevel" name="experienceLevel">
+            <option>Entry-level (0–2 years)</option>
+            <option>Mid-level (3–5 years)</option>
+            <option>Senior (6+ years)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-field">
+        <span class="form-label">Preferred Technologies</span>
+        <div class="tech-tags">
+          <span class="tag tag-accent" *ngFor="let tech of form.technologies">{{ tech }}</span>
+        </div>
+        <p class="form-hint">Used to personalize matching and interview questions.</p>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <span class="save-note" *ngIf="saved" role="status">&#10003; Changes saved (demo)</span>
+      </div>
+    </form>
+  </div>
+</div>

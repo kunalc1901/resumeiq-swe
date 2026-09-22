@@ -1,0 +1,119 @@
+<div class="dash-page">
+  <app-page-header title="Settings" subtitle="Manage your preferences."></app-page-header>
+
+  <div class="settings-layout">
+    <!-- Appearance -->
+    <section class="settings-card dash-card dash-card-pad">
+      <div class="settings-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="layers" [size]="16" />
+        </span>
+        <div>
+          <h2 class="card-title">Appearance</h2>
+          <p class="card-sub">How ResumeIQ looks for you.</p>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-text">
+          <div class="settings-row-title">Dark theme</div>
+          <div class="settings-row-sub">The default ResumeIQ appearance.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="prefs.darkMode" name="darkMode" />
+          <span class="toggle-track"></span>
+          <span class="visually-hidden">Dark theme</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Notifications -->
+    <section class="settings-card dash-card dash-card-pad">
+      <div class="settings-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="bell" [size]="16" />
+        </span>
+        <div>
+          <h2 class="card-title">Notifications</h2>
+          <p class="card-sub">Choose what you want to hear about.</p>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-text">
+          <div class="settings-row-title">Email notifications</div>
+          <div class="settings-row-sub">Analysis and match results by email.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="prefs.emailNotifications" name="emailNotifications" />
+          <span class="toggle-track"></span>
+          <span class="visually-hidden">Email notifications</span>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-text">
+          <div class="settings-row-title">Interview reminders</div>
+          <div class="settings-row-sub">Reminders for scheduled practice sessions.</div>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" [(ngModel)]="prefs.interviewReminders" name="interviewReminders" />
+          <span class="toggle-track"></span>
+          <span class="visually-hidden">Interview reminders</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- AI preferences -->
+    <section class="settings-card dash-card dash-card-pad">
+      <div class="settings-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="cpu" [size]="16" />
+        </span>
+        <div>
+          <h2 class="card-title">AI Preferences</h2>
+          <p class="card-sub">How the AI responds and analyzes.</p>
+        </div>
+      </div>
+      <div class="settings-form">
+        <div class="form-field">
+          <label class="form-label" for="response-style">Response style</label>
+          <select id="response-style" class="form-select" [(ngModel)]="prefs.responseStyle" name="responseStyle">
+            <option>Concise</option>
+            <option>Detailed</option>
+            <option>Friendly</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="analysis-detail">Analysis detail level</label>
+          <select id="analysis-detail" class="form-select" [(ngModel)]="prefs.analysisDetail" name="analysisDetail">
+            <option>Brief</option>
+            <option>Detailed</option>
+            <option>Exhaustive</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account -->
+    <section class="settings-card dash-card dash-card-pad">
+      <div class="settings-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="shield" [size]="16" />
+        </span>
+        <div>
+          <h2 class="card-title">Account</h2>
+          <p class="card-sub">Manage your account.</p>
+        </div>
+      </div>
+      <div class="settings-actions">
+        <button type="button" class="btn btn-ghost" (click)="logout()">
+          <app-icon name="logout" [size]="16" />
+          Logout
+        </button>
+        <button type="button" class="btn btn-ghost danger">
+          <app-icon name="trash" [size]="16" />
+          Delete Account
+        </button>
+      </div>
+      <p class="settings-note">Delete account is not available yet.</p>
+    </section>
+  </div>
+</div>

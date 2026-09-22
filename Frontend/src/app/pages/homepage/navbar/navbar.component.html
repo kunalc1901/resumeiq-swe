@@ -1,0 +1,68 @@
+<header class="navbar" [class.is-scrolled]="isScrolled">
+  <div class="navbar-inner">
+    <a routerLink="/" class="brand" aria-label="ResumeIQ home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient id="brandGradNav" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0" stop-color="#6366f1" />
+              <stop offset="1" stop-color="#8b5cf6" />
+            </linearGradient>
+          </defs>
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#brandGradNav)" />
+          <path
+            d="M10 9h8.5a1 1 0 0 1 1 1v4.5"
+            stroke="#fff"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+          <path d="M10 14h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M10 18h7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+          <path
+            d="M23.5 19.5 24.9 22l2.6 1.4-2.6 1.4-1.4 2.6-1.4-2.6-2.6-1.4 2.6-1.4z"
+            fill="#fff"
+          />
+        </svg>
+      </span>
+      <span class="brand-name">ResumeIQ</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#job-matching">Job Matching</a>
+      <a href="#interview-prep">Interview Prep</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a routerLink="/login" class="nav-login">Login</a>
+      <a routerLink="/dashboard" class="btn btn-primary btn-sm">Analyze Resume</a>
+    </div>
+
+    <button
+      type="button"
+      class="nav-toggle"
+      [attr.aria-expanded]="isMenuOpen"
+      aria-controls="mobile-menu"
+      aria-label="Toggle navigation menu"
+      (click)="toggleMenu()"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu" [class.is-open]="isMenuOpen">
+    <a href="#features" (click)="closeMenu()">Features</a>
+    <a href="#how-it-works" (click)="closeMenu()">How It Works</a>
+    <a href="#job-matching" (click)="closeMenu()">Job Matching</a>
+    <a href="#interview-prep" (click)="closeMenu()">Interview Prep</a>
+    <div class="mobile-actions">
+      <a routerLink="/login" (click)="closeMenu()" class="btn btn-ghost btn-block">Login</a>
+      <a routerLink="/dashboard" (click)="closeMenu()" class="btn btn-primary btn-block">
+        Analyze Resume
+      </a>
+    </div>
+  </div>
+</header>

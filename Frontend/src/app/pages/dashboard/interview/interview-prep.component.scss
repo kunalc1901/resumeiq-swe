@@ -1,0 +1,258 @@
+.setup-card {
+  max-width: 640px;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease,
+    background-color 0.18s ease;
+}
+
+.chip:hover {
+  color: var(--text-primary);
+  border-color: rgba(129, 140, 248, 0.4);
+}
+
+.chip-active {
+  color: #ffffff;
+  background: var(--grad-accent);
+  border-color: transparent;
+}
+
+.setup-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+/* Interview mode */
+.interview-card {
+  padding: 24px;
+  max-width: 760px;
+}
+
+.interview-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.interview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.interview-progress {
+  margin-bottom: 24px;
+}
+
+.interview-progress-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.interview-progress-pct {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.question-block {
+  padding: 8px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.question-text {
+  font-size: 19px;
+  line-height: 1.55;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  max-width: 620px;
+}
+
+.answer-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px 0 16px;
+}
+
+.answer-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* Evaluating */
+.evaluating {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 24px 0;
+}
+
+.typing-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-subtle);
+}
+
+.typing-dots span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  animation: typingBlink 1.2s infinite ease-in-out;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBlink {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+.evaluating-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* Evaluation */
+.evaluation {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 20px;
+  display: grid;
+  gap: 18px;
+  animation: pageEnter 0.4s ease both;
+}
+
+.evaluation-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.eval-section {
+  display: grid;
+  gap: 8px;
+}
+
+.eval-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.eval-title.good {
+  color: #6ee7b7;
+}
+
+.eval-title.warn {
+  color: #fcd34d;
+}
+
+.eval-title.accent {
+  color: #a5b4fc;
+}
+
+.eval-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.eval-list li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.eval-list li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(165, 180, 252, 0.6);
+  flex: none;
+}
+
+.eval-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin: 0;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+}
+
+.eval-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-dots span {
+    animation: none;
+  }
+
+  .evaluation {
+    animation: none;
+  }
+}

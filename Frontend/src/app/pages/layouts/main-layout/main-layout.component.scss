@@ -1,0 +1,29 @@
+.main-layout {
+  min-height: 100vh;
+
+  .navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background-color: #343a40;
+    color: #ffffff;
+
+    .navbar-brand {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .navbar-links {
+      a {
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 16px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

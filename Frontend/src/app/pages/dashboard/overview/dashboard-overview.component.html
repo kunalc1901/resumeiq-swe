@@ -1,0 +1,116 @@
+<div class="dash-page">
+  <app-page-header
+    [title]="greeting + ', ' + firstName + ' 👋'"
+    subtitle="Here's an overview of your resume and career readiness."
+  >
+    <ng-container slot="actions">
+      <a routerLink="/dashboard/resume" class="btn btn-primary">Analyze New Resume</a>
+    </ng-container>
+  </app-page-header>
+
+  <!-- Resume status -->
+  <div class="resume-card dash-card" *ngIf="resumeStatus">
+    <div class="resume-card-main">
+      <div class="resume-file">
+        <span class="icon-tile" aria-hidden="true">
+          <app-icon name="file-text" [size]="20" />
+        </span>
+        <div class="resume-file-meta">
+          <div class="resume-file-name">{{ resumeStatus.fileName }}</div>
+          <div class="resume-file-sub">Last analyzed: {{ resumeStatus.lastAnalyzed }}</div>
+        </div>
+      </div>
+
+      <div class="resume-scores">
+        <div class="resume-score">
+          <app-score-ring [value]="resumeStatus.overallScore" [size]="96">
+            <div class="ring-value">
+              <strong>{{ resumeStatus.overallScore }}</strong>
+              <span>/100</span>
+            </div>
+          </app-score-ring>
+          <div class="resume-score-label">Overall Score</div>
+        </div>
+        <div class="resume-ats">
+          <app-progress-bar [value]="resumeStatus.atsScore" label="ATS Score" />
+          <p class="resume-ats-note">
+            AI-powered ATS insights based on keyword coverage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-actions">
+      <a routerLink="/dashboard/resume" class="btn btn-ghost">View Analysis</a>
+      <a routerLink="/dashboard/resume" class="btn btn-primary">Analyze Again</a>
+    </div>
+  </div>
+
+  <!-- Quick stats -->
+  <div class="stat-grid stat-grid-margin" *ngIf="stats.length">
+    <app-stat-card *ngFor="let stat of stats" [stat]="stat"></app-stat-card>
+  </div>
+
+  <!-- Recent insights -->
+  <section class="dash-section">
+    <div class="section-row">
+      <h2 class="section-heading">Recent Insights</h2>
+      <a routerLink="/dashboard/resume" class="section-link">View full analysis</a>
+    </div>
+    <div class="insight-grid">
+      <article class="insight-card dash-card dash-card-pad dash-card-hover" *ngFor="let ins of insights">
+        <div class="insight-top">
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon [name]="ins.icon" [size]="16" />
+          </span>
+          <span class="tag tag-accent">{{ ins.category }}</span>
+        </div>
+        <h3 class="insight-title">{{ ins.title }}</h3>
+        <p class="insight-desc">{{ ins.description }}</p>
+        <a routerLink="/dashboard/resume" class="insight-link">View details</a>
+      </article>
+    </div>
+  </section>
+
+  <!-- Quick actions -->
+  <section class="dash-section">
+    <h2 class="section-heading">What would you like to do?</h2>
+    <div class="quick-grid">
+      <a
+        *ngFor="let action of quickActions"
+        class="quick-card dash-card dash-card-pad dash-card-hover"
+        [routerLink]="action.route"
+      >
+        <div class="quick-top">
+          <span class="icon-tile" aria-hidden="true">
+            <app-icon [name]="action.icon" [size]="20" />
+          </span>
+          <span class="quick-arrow" aria-hidden="true">
+            <app-icon name="arrow-right" [size]="16" />
+          </span>
+        </div>
+        <h3 class="quick-title">{{ action.label }}</h3>
+        <p class="quick-desc">{{ action.desc }}</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Recent activity -->
+  <section class="dash-section">
+    <h2 class="section-heading">Recent Activity</h2>
+    <div class="activity-card dash-card dash-card-pad">
+      <div class="activity-group" *ngFor="let group of activity">
+        <div class="activity-date">{{ group.date }}</div>
+        <div class="activity-item" *ngFor="let item of group.items">
+          <span class="activity-icon" aria-hidden="true">
+            <app-icon [name]="item.icon" [size]="16" />
+          </span>
+          <div class="activity-text">
+            <span class="activity-main">&#10003; {{ item.text }}</span>
+            <span class="activity-detail">{{ item.detail }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

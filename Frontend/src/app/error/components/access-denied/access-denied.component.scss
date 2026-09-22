@@ -1,0 +1,26 @@
+.error-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  background-color: #f4f6f8;
+}
+
+.error-content {
+  padding: 40px;
+
+  h1 {
+    font-size: 72px;
+    margin: 0;
+    color: #dc3545;
+  }
+
+  h2 {
+    margin: 10px 0;
+  }
+
+  button {
+    margin-top: 20px;
+  }
+}

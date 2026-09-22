@@ -1,0 +1,78 @@
+<div class="dash-page qa-page">
+  <app-page-header
+    title="Ask Your Resume"
+    subtitle="Ask questions about your experience, skills and projects."
+  ></app-page-header>
+
+  <div class="chat-card dash-card">
+    <div class="chat-scroll dash-scroll">
+      <div class="chat-message user" *ngFor="let m of userMessages">
+        <div class="bubble user-bubble">{{ m.content }}</div>
+      </div>
+
+      <div class="chat-message assistant" *ngFor="let m of assistantMessages">
+        <div class="assistant-avatar" aria-hidden="true">
+          <app-icon name="sparkles" [size]="16" />
+        </div>
+        <div class="assistant-body">
+          <div class="bubble assistant-bubble">{{ m.content }}</div>
+          <div class="source-tag" *ngIf="m.source">
+            <app-icon name="book" [size]="13" />
+            Source: {{ m.source }}
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-typing" *ngIf="typing">
+        <div class="assistant-avatar" aria-hidden="true">
+          <app-icon name="sparkles" [size]="16" />
+        </div>
+        <div class="typing-dots" aria-label="ResumeIQ is typing">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+
+      <div class="chat-empty" *ngIf="!messages.length && !typing">
+        <div class="chat-empty-icon" aria-hidden="true">
+          <app-icon name="message-circle" [size]="26" />
+        </div>
+        <h3 class="chat-empty-title">Ask anything about your resume</h3>
+        <p class="chat-empty-text">
+          ResumeIQ answers from your actual experience, projects and skills.
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-suggestions" *ngIf="!messages.length">
+      <span class="section-label">Try asking</span>
+      <div class="suggestion-chips">
+        <button
+          type="button"
+          class="chip"
+          *ngFor="let q of suggestedQuestions"
+          (click)="ask(q)"
+        >
+          {{ q }}
+        </button>
+      </div>
+    </div>
+
+    <form class="chat-input" (ngSubmit)="send()">
+      <input
+        type="text"
+        name="question"
+        class="chat-input-field"
+        placeholder="Ask something about your resume..."
+        [(ngModel)]="input"
+        aria-label="Ask a question"
+        autocomplete="off"
+      />
+      <button type="submit" class="btn btn-primary" [disabled]="!input.trim()">
+        <app-icon name="send" [size]="16" />
+        <span class="send-label">Send</span>
+      </button>
+    </form>
+  </div>
+</div>

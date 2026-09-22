@@ -1,0 +1,203 @@
+<div class="dash-layout">
+  <!-- Top header -->
+  <header class="dash-header">
+    <div class="header-inner">
+      <div class="header-left">
+        <button
+          type="button"
+          class="btn-icon header-menu-btn"
+          (click)="openMobileMenu()"
+          aria-label="Open navigation menu"
+        >
+          <app-icon name="menu" [size]="18" />
+        </button>
+        <a routerLink="/dashboard/overview" class="brand" aria-label="ResumeIQ dashboard">
+          <span class="brand-mark" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+              <defs>
+                <linearGradient id="brandGradDash" x1="0" y1="0" x2="32" y2="32">
+                  <stop offset="0" stop-color="#6366f1" />
+                  <stop offset="1" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+              <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#brandGradDash)" />
+              <path d="M10 9h8.5a1 1 0 0 1 1 1v4.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+              <path d="M10 14h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+              <path d="M10 18h7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+              <path d="M23.5 19.5 24.9 22l2.6 1.4-2.6 1.4-1.4 2.6-1.4-2.6-2.6-1.4 2.6-1.4z" fill="#fff" />
+            </svg>
+          </span>
+          <span class="brand-name">ResumeIQ</span>
+        </a>
+      </div>
+
+      <div class="header-center">
+        <div class="header-search">
+          <app-icon name="search" [size]="16" />
+          <input type="search" placeholder="Search..." aria-label="Search" />
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-drop">
+          <button
+            type="button"
+            class="btn-icon"
+            (click)="toggleNotifications()"
+            aria-label="Notifications"
+            [attr.aria-expanded]="notifOpen"
+          >
+            <app-icon name="bell" [size]="18" />
+            <span class="notif-dot" aria-hidden="true"></span>
+          </button>
+          <div class="dropdown-menu notif-menu" *ngIf="notifOpen">
+            <div class="dropdown-label">Notifications</div>
+            <button
+              type="button"
+              class="dropdown-item"
+              *ngFor="let n of notifications"
+              (click)="closeDropdowns()"
+            >
+              <span class="dropdown-item-icon" aria-hidden="true">
+                <app-icon [name]="n.icon" [size]="16" />
+              </span>
+              <span class="dropdown-item-text">
+                <span class="dropdown-item-title">{{ n.text }}</span>
+                <span class="dropdown-item-time">{{ n.time }}</span>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <div class="header-drop">
+          <button
+            type="button"
+            class="profile-btn"
+            (click)="toggleProfile()"
+            aria-label="User menu"
+            [attr.aria-expanded]="profileOpen"
+          >
+            <span class="avatar" aria-hidden="true">{{ initials }}</span>
+            <span class="profile-meta">
+              <span class="profile-name">{{ fullName }}</span>
+              <span class="profile-chevron" aria-hidden="true">
+                <app-icon name="chevron-down" [size]="14" />
+              </span>
+            </span>
+          </button>
+          <div class="dropdown-menu profile-menu" *ngIf="profileOpen">
+            <div class="dropdown-user">
+              <span class="avatar" aria-hidden="true">{{ initials }}</span>
+              <div class="dropdown-user-meta">
+                <div class="dropdown-user-name">{{ fullName }}</div>
+                <div class="dropdown-user-email">{{ email }}</div>
+              </div>
+            </div>
+            <div class="dropdown-sep"></div>
+            <a routerLink="/dashboard/profile" class="dropdown-item" (click)="closeDropdowns()">
+              <span class="dropdown-item-icon" aria-hidden="true"><app-icon name="user" [size]="16" /></span>
+              Profile
+            </a>
+            <a routerLink="/dashboard/settings" class="dropdown-item" (click)="closeDropdowns()">
+              <span class="dropdown-item-icon" aria-hidden="true"><app-icon name="settings" [size]="16" /></span>
+              Settings
+            </a>
+            <div class="dropdown-sep"></div>
+            <button type="button" class="dropdown-item danger" (click)="logout()">
+              <span class="dropdown-item-icon" aria-hidden="true"><app-icon name="logout" [size]="16" /></span>
+              Logout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dropdown-backdrop" *ngIf="profileOpen || notifOpen" (click)="closeDropdowns()"></div>
+  </header>
+
+  <!-- Body: sidebar + content -->
+  <div class="dash-body">
+    <aside class="sidebar" [class.collapsed]="collapsed" aria-label="Primary">
+      <nav class="sidebar-nav">
+        <div class="nav-group" *ngFor="let group of navGroups">
+          <div class="nav-group-label">{{ group.label }}</div>
+          <a
+            *ngFor="let item of group.items"
+            class="nav-item"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [title]="collapsed ? item.label : ''"
+          >
+            <span class="nav-icon" aria-hidden="true">
+              <app-icon [name]="item.icon" [size]="18" />
+            </span>
+            <span class="nav-label">{{ item.label }}</span>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button
+          type="button"
+          class="btn-icon sidebar-collapse"
+          (click)="toggleCollapsed()"
+          [attr.aria-label]="collapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        >
+          <app-icon [name]="collapsed ? 'chevron-right' : 'chevron-left'" [size]="16" />
+        </button>
+      </div>
+    </aside>
+
+    <main class="dash-main">
+      <div class="dash-container">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Mobile drawer -->
+<div class="drawer-backdrop" *ngIf="mobileOpen" (click)="closeMobileMenu()"></div>
+<aside class="mobile-drawer" [class.is-open]="mobileOpen" aria-label="Mobile navigation">
+  <div class="drawer-header">
+    <a routerLink="/dashboard/overview" class="brand" (click)="closeMobileMenu()" aria-label="ResumeIQ dashboard">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient id="brandGradDrawer" x1="0" y1="0" x2="32" y2="32">
+              <stop offset="0" stop-color="#6366f1" />
+              <stop offset="1" stop-color="#8b5cf6" />
+            </linearGradient>
+          </defs>
+          <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#brandGradDrawer)" />
+          <path d="M10 9h8.5a1 1 0 0 1 1 1v4.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M10 14h6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M10 18h7" stroke="#fff" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M23.5 19.5 24.9 22l2.6 1.4-2.6 1.4-1.4 2.6-1.4-2.6-2.6-1.4 2.6-1.4z" fill="#fff" />
+        </svg>
+      </span>
+      <span class="brand-name">ResumeIQ</span>
+    </a>
+    <button type="button" class="btn-icon" (click)="closeMobileMenu()" aria-label="Close menu">
+      <app-icon name="x" [size]="18" />
+    </button>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="nav-group" *ngFor="let group of navGroups">
+      <div class="nav-group-label">{{ group.label }}</div>
+      <a
+        *ngFor="let item of group.items"
+        class="nav-item"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        (click)="closeMobileMenu()"
+      >
+        <span class="nav-icon" aria-hidden="true">
+          <app-icon [name]="item.icon" [size]="18" />
+        </span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    </div>
+  </nav>
+</aside>

@@ -41,15 +41,5 @@ testem.log
 .DS_Store
 Thumbs.db
 
-# Devenv
-.devenv*
-devenv.local.nix
-
-# direnv
-.direnv
-
-1f1c70d144422122-concatinated.crt
-cognistx.key
-.env-*
-!.env-template
-.env
+*.pem
+.angular

@@ -1,0 +1,284 @@
+.scores-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 16px;
+}
+
+.score-hero {
+  padding: 28px;
+}
+
+.score-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.hero-ring-value {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.hero-ring-value strong {
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.hero-ring-value span {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.score-hero-meta {
+  flex: 1;
+  min-width: 180px;
+}
+
+.score-hero-note {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 10px 0 0;
+}
+
+.ats-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ats-value {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.ats-note {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  margin: 4px 0 0;
+}
+
+/* Summary */
+.summary-text {
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+/* Skills */
+.skills-groups {
+  display: grid;
+  gap: 20px;
+}
+
+.skill-group-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Timeline */
+.timeline {
+  display: grid;
+  gap: 18px;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 14px;
+}
+
+.timeline-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--grad-accent);
+  margin-top: 6px;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+  position: relative;
+}
+
+.timeline-role {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.timeline-company {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+.timeline-points {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.timeline-points li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.timeline-points li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(165, 180, 252, 0.6);
+}
+
+/* Projects */
+.project-name {
+  font-size: 15.5px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.project-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0 0 14px;
+}
+
+.project-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* Education */
+.education-list {
+  display: grid;
+  gap: 12px;
+}
+
+.education-degree {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.education-school {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Strengths / improve */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.check-list,
+.warn-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.check-list li,
+.warn-list li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-primary);
+}
+
+.check-list li::before {
+  content: '\2713';
+  color: #34d399;
+  font-weight: 700;
+  flex: none;
+}
+
+.warn-list li::before {
+  content: '\26A0';
+  color: #fbbf24;
+  flex: none;
+}
+
+/* Keywords */
+.keyword-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Suggestions */
+.suggestion-list {
+  display: grid;
+  gap: 14px;
+}
+
+.suggestion {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 14px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.suggestion-title {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.suggestion-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 4px 0 0;
+}
+
+@media (max-width: 1024px) {
+  .scores-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .two-col {
+    grid-template-columns: 1fr;
+  }
+
+  .suggestion {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
