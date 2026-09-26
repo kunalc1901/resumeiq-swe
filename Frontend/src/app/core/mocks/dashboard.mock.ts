@@ -119,8 +119,8 @@ export const MOCK_ACTIVITY: ActivityGroup[] = [
 
 export const MOCK_ANALYSIS: ResumeAnalysis = {
   fileName: 'Software_Engineer_Resume.pdf',
-  overallScore: 82,
-  atsScore: 78,
+  overallScore: 87,
+  atsScore: 82,
   summary:
     'John is a Software Engineer with strong full-stack experience centered on Node.js, MongoDB and React. The resume shows solid hands-on project work and clear backend depth, with room to make impact and outcomes more measurable.',
   skills: [
@@ -186,44 +186,48 @@ export const MOCK_ANALYSIS: ResumeAnalysis = {
       period: '2016 – 2020',
     },
   ],
+  scoreBreakdown: {
+    contentQuality: 23,
+    experienceImpact: 18,
+    skillsRelevance: 13,
+    structureClarity: 14,
+    projectsEducationCertifications: 9,
+    professionalismConsistency: 9,
+    completeness: 1,
+  },
+  scoreSummary:
+    'A strong resume overall, with clear backend depth and well-organized sections. Impact and outcomes are the main area holding it back from an excellent score.',
   strengths: [
-    'Strong backend development foundation',
-    'Clear, well-structured project history',
-    'Relevant modern stack experience',
+    'Strong backend foundation with consistent, hands-on project history',
+    'Clear, well-structured sections that are easy to scan',
+    'Relevant modern stack experience (Node.js, MongoDB, React)',
     'Good balance of technical and soft skills',
   ],
-  areasToImprove: [
-    'Add measurable achievements and outcomes',
-    'Strengthen cloud and deployment experience',
-    'Improve keyword coverage for target roles',
-    'Quantify project impact with metrics',
+  improvements: [
+    'Quantify your outcomes. Statements like "Optimized database queries, reducing average response time" are vague. Replace them with a concrete result, for example: "Reduced average API response time by 40% by adding Redis caching and query tuning."',
+    'Add measurable project impact. For TaskFlow API, instead of "a REST API for team task management", write "Used by 12 internal teams to track 3,000+ tasks, cutting planning overhead by 30%." Only use figures that were actually in your resume.',
+    'Expand cloud and deployment exposure. Since Docker, AWS and CI/CD appear only as "basic" in your tools, show concrete usage: "Containerized the API with Docker and deployed to AWS ECS with a CI/CD pipeline."',
   ],
-  missingKeywords: ['AWS', 'Docker', 'CI/CD', 'Kubernetes', 'Terraform'],
-  improvementSuggestions: [
-    {
-      title: 'Quantify outcomes',
-      description:
-        'Add metrics such as "reduced response time by 30%" where data is available in the original resume.',
-      priority: 'high',
-    },
-    {
-      title: 'Add a skills summary',
-      description:
-        'Place a concise skills line near the top so recruiters see core strengths immediately.',
-      priority: 'high',
-    },
-    {
-      title: 'Expand project impact',
-      description:
-        'Describe project outcomes and users served, using only facts present in the resume.',
-      priority: 'medium',
-    },
-    {
-      title: 'Align keywords with roles',
-      description:
-        'Mirror terminology from target job descriptions where it matches your actual experience.',
-      priority: 'medium',
-    },
+  atsScoreBreakdown: {
+    structure: 22,
+    keywordTerminology: 17,
+    experienceSkillsParsability: 13,
+    formattingConsistency: 13,
+    contentOrganization: 9,
+    contactParsability: 5,
+    dateConsistency: 3,
+  },
+  atsSummary:
+    'The resume has a clear, parseable structure with standard section headings and identifiable job titles. Inconsistent date formatting and non-standard terminology for some tools reduce how reliably an ATS can index it.',
+  atsStrengths: [
+    'Standard section headings (Experience, Projects, Education, Skills) are easy for an ATS to parse',
+    'Job titles and companies are clearly identifiable for each role',
+    'Contact information is complete and clearly presented',
+  ],
+  atsImprovements: [
+    'Make date formatting consistent. You mix "Jan 2022 – Present" with "Jun 2020 – Dec 2021" and "2016 – 2020". Use one format everywhere, for example "Jan 2022 – Present", so the ATS parses every date range reliably.',
+    'Use standard, industry-recognizable terms for tools. "Docker (basic)" is not a keyword an ATS matches well. List it plainly as "Docker" in your skills and show real usage in your experience section.',
+    'Keep section naming uniform. If you label one section "Technical Skills" and another "Tools & Technologies", an ATS may treat them separately. Combine related skills under a single "Skills" heading.',
   ],
 };
 

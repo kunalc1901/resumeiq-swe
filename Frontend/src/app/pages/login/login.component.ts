@@ -5,10 +5,11 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services';
 import { User } from '../../core/models/user.model';
 import { MESSAGES } from '../../constants/constants';
+import { PasswordPolicyComponent } from '../../shared/password-policy/password-policy.component';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, PasswordPolicyComponent],
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
@@ -21,6 +22,8 @@ export class LoginComponent implements OnInit {
   loginErrMsg: string = '';
   disableLoginButton: boolean = false;
   showPassword: boolean = false;
+  passwordFocused: boolean = false;
+  passwordValid: boolean = false;
 
   constructor(
     private router: Router,
@@ -51,6 +54,7 @@ export class LoginComponent implements OnInit {
     this.mode = mode;
     this.showLoginErrorMsg = false;
     this.loginErrMsg = '';
+    this.passwordFocused = false;
   }
 
   /**
@@ -94,6 +98,12 @@ export class LoginComponent implements OnInit {
       this.user.email &&
       this.user.password
     ) {
+      if (!this.passwordValid) {
+        this.showLoginErrorMsg = true;
+        this.loginErrMsg =
+          'Please choose a stronger password. It must meet all the requirements shown below.';
+        return;
+      }
       this.disableLoginButton = true;
       this.authService
         .signup(this.user)

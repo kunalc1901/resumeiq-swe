@@ -1,16 +1,149 @@
 <div class="dash-page">
-  <ng-container *ngIf="analysis; else noResume">
-    <app-page-header
-      title="Resume Analysis"
-      subtitle="Understand what your resume says about you."
+  <!-- My Resumes -->
+  <app-page-header
+    title="My Resumes"
+    subtitle="Upload and analyze your resumes. Switching resumes never uses AI analysis."
+  >
+    <ng-container slot="actions">
+      <span class="resume-slots-label">{{ slotLabel }}</span>
+    </ng-container>
+  </app-page-header>
+
+  <!-- Why tailored resumes -->
+  <section class="slots-marketing dash-card dash-card-pad">
+    <div class="slots-marketing-icon" aria-hidden="true">
+      <app-icon name="layers" [size]="22" />
+    </div>
+    <div class="slots-marketing-body">
+      <div class="slots-marketing-badge">
+        <span class="tag tag-accent">ResumeIQ tip</span>
+      </div>
+      <h3 class="slots-marketing-title">A tailored resume wins more interviews.</h3>
+      <p class="slots-marketing-text">
+        Most people send the exact same resume to every opening. Recruiters and
+        ATS filters can spot a generic one in seconds. Create a dedicated resume
+        for each target role or company — then switch between them the moment
+        you're ready to apply.
+      </p>
+      <p class="slots-marketing-foot" *ngIf="!isPremium">
+        Your Free plan stores up to 3 resumes. Upgrade to Premium and keep up to
+        20 — organized, ready and one tap away.
+      </p>
+      <p class="slots-marketing-foot" *ngIf="isPremium">
+        ResumeIQ Premium keeps up to 20 resumes, so you can tailor one to every
+        role you're pursuing.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="btn btn-primary btn-sm slots-marketing-cta"
+      *ngIf="!isPremium"
+      (click)="goUpgrade()"
     >
-      <ng-container slot="actions">
-        <a routerLink="/dashboard/resume" class="btn btn-ghost">
-          <app-icon name="refresh" [size]="16" />
-          Analyze Again
-        </a>
-      </ng-container>
-    </app-page-header>
+      <app-icon name="star" [size]="14" />
+      Upgrade to Premium
+    </button>
+  </section>
+
+  <!-- Slot strip (horizontally scrollable) -->
+  <div class="slot-strip" aria-label="Your resume slots">
+    <!-- Filled slots -->
+    <article
+      class="slot-card"
+      *ngFor="let resume of resumes"
+      [class.selected]="resume.selected"
+      (click)="selectResume(resume)"
+      [attr.aria-label]="resume.fileName"
+    >
+      <div class="slot-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="file-text" [size]="16" />
+        </span>
+        <span class="tag tag-accent" *ngIf="resume.selected">Selected</span>
+      </div>
+
+      <div class="slot-file" appTruncateTitle>{{ resume.fileName }}</div>
+      <div class="slot-meta">Uploaded {{ resume.uploadedAt }}</div>
+
+      <div class="slot-status" *ngIf="resume.analyzed && resume.overallScore !== null">
+        <span class="slot-score">
+          <strong>{{ resume.overallScore }}</strong>
+          <span class="slot-score-unit">overall</span>
+        </span>
+        <span class="tag tag-success">ATS {{ resume.atsScore }}%</span>
+      </div>
+      <span class="tag" *ngIf="!resume.analyzed">Not analyzed yet</span>
+
+      <div class="slot-actions">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          *ngIf="!resume.analyzed"
+          (click)="$event.stopPropagation(); analyzeResume(resume)"
+        >
+          <app-icon name="zap" [size]="14" />
+          Analyze
+        </button>
+        <span class="slot-analyzed" *ngIf="resume.analyzed">
+          <app-icon name="check" [size]="14" />
+          Analyzed
+        </span>
+        <button
+          type="button"
+          class="btn-icon slot-delete"
+          (click)="$event.stopPropagation(); deleteResume(resume)"
+          [attr.aria-label]="'Delete ' + resume.fileName"
+          title="Delete resume"
+        >
+          <app-icon name="trash" [size]="15" />
+        </button>
+      </div>
+    </article>
+
+    <!-- Add slot -->
+    <button
+      type="button"
+      class="slot-card slot-add"
+      *ngIf="hasSlotsRemaining"
+      (click)="onUpload()"
+      aria-label="Add a resume"
+    >
+      <span class="slot-add-icon" aria-hidden="true">
+        <app-icon name="plus" [size]="24" />
+      </span>
+      <span class="slot-add-label">Add Resume</span>
+      <span class="slot-add-sub">Store up to {{ subscription.usageOf('resumeSlots').limit }} resumes</span>
+    </button>
+
+    <!-- Locked premium slot (free plan only) -->
+    <button
+      type="button"
+      class="slot-card slot-locked"
+      *ngIf="!isPremium"
+      (click)="slotModalOpen = true"
+      aria-label="Upgrade to Premium for more resume slots"
+    >
+      <span class="slot-locked-icon" aria-hidden="true">
+        <app-icon name="lock" [size]="20" />
+      </span>
+      <span class="slot-locked-title">Unlock more slots</span>
+      <span class="slot-locked-sub">Upgrade to Premium to store up to 20 resumes.</span>
+    </button>
+  </div>
+
+  <!-- Empty hint when there are no resumes yet -->
+  <div class="slot-empty-hint" *ngIf="!resumes.length">
+    Your ResumeIQ workspace is empty. Add your first resume to start analysing your profile.
+  </div>
+
+  <!-- Analysis -->
+  <ng-container *ngIf="analysis">
+    <div class="dash-section">
+      <app-page-header
+        title="Resume Analysis"
+        [subtitle]="'Analysis for ' + selectedResumeFileName"
+      ></app-page-header>
+    </div>
 
     <!-- Scores -->
     <div class="scores-grid">
@@ -25,7 +158,7 @@
           <div class="score-hero-meta">
             <span class="section-label">Overall Score</span>
             <p class="score-hero-note">
-              A balanced view of structure, relevance and content strength across your resume.
+              {{ analysis.scoreSummary }}
             </p>
           </div>
         </div>
@@ -36,8 +169,53 @@
         <div class="ats-value">{{ analysis.atsScore }}%</div>
         <app-progress-bar [value]="analysis.atsScore" [showValue]="false" />
         <p class="ats-note">
-          AI-powered ATS insights based on keyword coverage and standard section formatting.
+          {{ analysis.atsSummary }}
         </p>
+      </div>
+    </div>
+
+    <!-- Score breakdowns -->
+    <div class="breakdown-grid">
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">Overall Score Breakdown</h2>
+            <p class="card-sub">How the overall score is calculated.</p>
+          </div>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="layers" [size]="16" />
+          </span>
+        </div>
+        <div class="breakdown-list">
+          <div class="breakdown-row" *ngFor="let row of overallBreakdown">
+            <div class="breakdown-head">
+              <span class="breakdown-label">{{ row.label }}</span>
+              <span class="breakdown-value">{{ row.value }} / {{ row.max }}</span>
+            </div>
+            <app-progress-bar [value]="row.value" [max]="row.max" [showValue]="false" />
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-card dash-card-pad">
+        <div class="card-head">
+          <div>
+            <h2 class="card-title">ATS Score Breakdown</h2>
+            <p class="card-sub">How the ATS compatibility score is calculated.</p>
+          </div>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="cpu" [size]="16" />
+          </span>
+        </div>
+        <div class="breakdown-list">
+          <div class="breakdown-row" *ngFor="let row of atsBreakdown">
+            <div class="breakdown-head">
+              <span class="breakdown-label">{{ row.label }}</span>
+              <span class="breakdown-value">{{ row.value }} / {{ row.max }}</span>
+            </div>
+            <app-progress-bar [value]="row.value" [max]="row.max" [showValue]="false" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -111,90 +289,90 @@
       </app-collapsible-section>
     </section>
 
-    <!-- Strengths & improvement -->
-    <div class="two-col dash-section">
-      <section class="dash-card dash-card-pad">
-        <div class="card-head">
-          <h2 class="card-title">Strengths</h2>
-          <span class="icon-tile icon-tile-sm" aria-hidden="true">
-            <app-icon name="check" [size]="16" />
-          </span>
-        </div>
-        <ul class="check-list">
-          <li *ngFor="let item of analysis.strengths">{{ item }}</li>
-        </ul>
-      </section>
+    <!-- Overall score insights -->
+    <div class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Overall Score Insights</h2>
+      </div>
+      <div class="two-col">
+        <section class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Strengths</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="check" [size]="16" />
+            </span>
+          </div>
+          <ul class="check-list">
+            <li *ngFor="let item of analysis.strengths">{{ item }}</li>
+          </ul>
+        </section>
 
-      <section class="dash-card dash-card-pad">
-        <div class="card-head">
-          <h2 class="card-title">Areas to Improve</h2>
-          <span class="icon-tile icon-tile-sm" aria-hidden="true">
-            <app-icon name="alert-triangle" [size]="16" />
-          </span>
-        </div>
-        <ul class="warn-list">
-          <li *ngFor="let item of analysis.areasToImprove">{{ item }}</li>
-        </ul>
-      </section>
+        <section class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Areas of Improvement</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="alert-triangle" [size]="16" />
+            </span>
+          </div>
+          <ul class="improve-list">
+            <li *ngFor="let item of analysis.improvements">{{ item }}</li>
+          </ul>
+        </section>
+      </div>
     </div>
 
-    <!-- Missing keywords -->
-    <section class="dash-section">
-      <div class="dash-card dash-card-pad">
-        <div class="card-head">
-          <div>
-            <h2 class="card-title">Missing Keywords</h2>
-            <p class="card-sub">Keywords that commonly appear in similar roles.</p>
-          </div>
-        </div>
-        <div class="keyword-tags">
-          <span class="tag tag-warn" *ngFor="let keyword of analysis.missingKeywords">
-            {{ keyword }}
-          </span>
-        </div>
+    <!-- ATS insights -->
+    <div class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">ATS Insights</h2>
       </div>
-    </section>
-
-    <!-- Improvement suggestions -->
-    <section class="dash-section">
-      <div class="dash-card dash-card-pad">
-        <div class="card-head">
-          <div>
-            <h2 class="card-title">Improvement Suggestions</h2>
-            <p class="card-sub">Prioritized recommendations grounded in your resume.</p>
-          </div>
-        </div>
-        <div class="suggestion-list">
-          <div class="suggestion" *ngFor="let suggestion of analysis.improvementSuggestions">
-            <span
-              class="tag"
-              [class.tag-accent]="suggestion.priority === 'high'"
-              [class.tag-info]="suggestion.priority === 'medium'"
-              [class.tag-warn]="suggestion.priority === 'low'"
-            >
-              {{ suggestion.priority }} priority
+      <div class="two-col">
+        <section class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">ATS Strengths</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="check" [size]="16" />
             </span>
-            <div>
-              <div class="suggestion-title">{{ suggestion.title }}</div>
-              <p class="suggestion-desc">{{ suggestion.description }}</p>
-            </div>
           </div>
-        </div>
+          <ul class="check-list">
+            <li *ngFor="let item of analysis.atsStrengths">{{ item }}</li>
+          </ul>
+        </section>
+
+        <section class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">ATS Improvements</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="alert-triangle" [size]="16" />
+            </span>
+          </div>
+          <ul class="improve-list">
+            <li *ngFor="let item of analysis.atsImprovements">{{ item }}</li>
+          </ul>
+        </section>
       </div>
-    </section>
+    </div>
   </ng-container>
 
-  <ng-template #noResume>
-    <app-page-header title="Resume Analysis" subtitle="Understand what your resume says about you."></app-page-header>
-    <app-empty-state
-      icon="file-text"
-      title="No resume analyzed yet"
-      text="Upload your resume to unlock personalized AI-powered insights."
-    >
-      <a routerLink="/dashboard/resume" class="btn btn-primary">
-        <app-icon name="upload" [size]="16" />
-        Upload Resume
-      </a>
-    </app-empty-state>
-  </ng-template>
+  <!-- Upgrade modals -->
+  <app-upgrade-modal
+    [open]="slotModalOpen"
+    icon="file-text"
+    title="You've reached your Free plan limit."
+    message="Free accounts can store up to 3 resumes. Upgrade to Premium to store up to 20 resumes."
+    note="Deleting a resume frees up a slot for a new one."
+    (dismiss)="slotModalOpen = false"
+    (upgrade)="goUpgrade()"
+  />
+
+  <app-upgrade-modal
+    [open]="analysisModalOpen"
+    icon="zap"
+    title="You've used all your AI analyses this month."
+    [message]="
+      'Your usage resets on ' + subscription.resetDateLabel() + '. Upgrade to Premium for 30 analyses per month.'
+    "
+    (dismiss)="analysisModalOpen = false"
+    (upgrade)="goUpgrade()"
+  />
 </div>

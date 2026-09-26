@@ -1,0 +1,399 @@
+.jm-detail-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+/* Hero */
+.jm-hero {
+  background: linear-gradient(
+    160deg,
+    rgba(99, 102, 241, 0.08),
+    var(--bg-card) 55%
+  );
+  border-color: rgba(129, 140, 248, 0.28);
+}
+
+.jm-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.jm-hero-score {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.jm-hero-score strong {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.jm-hero-score span {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+.jm-hero-meta {
+  flex: 1;
+  min-width: 240px;
+}
+
+.jm-hero-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 8px 0 12px;
+  color: var(--text-primary);
+  line-height: 1.15;
+}
+
+.jm-hero-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.jm-hero-summary {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0 0 10px;
+  max-width: 640px;
+}
+
+.jm-hero-sentence {
+  font-size: 13.5px;
+  color: #c7d2fe;
+  margin: 0;
+}
+
+/* Breakdown */
+.jm-breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.jm-breakdown-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.jm-breakdown-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.jm-breakdown-pct {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.jm-breakdown-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.jm-breakdown-value {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* Two-col helper */
+.jm-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Check / gap lists */
+.jm-check-list,
+.jm-gap-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.jm-check-list li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+.jm-check-list li::before {
+  content: '\2713';
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: #34d399;
+  font-weight: 700;
+}
+
+.jm-gap-list li {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.jm-gap-list li app-icon {
+  color: #fbbf24;
+  flex: none;
+  transform: translateY(2px);
+}
+
+/* Skills */
+.jm-skill-cols,
+.jm-keyword-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.jm-skill-item,
+.jm-resp-item {
+  padding: 12px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jm-skill-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.jm-skill-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 120px;
+}
+
+.jm-skill-evidence,
+.jm-skill-reason,
+.jm-resp-evidence {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.jm-skill-gap {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #fcd34d;
+}
+
+.jm-empty-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 8px 0 0;
+}
+
+/* Responsibilities */
+.jm-resp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.jm-resp-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+/* Experience */
+.jm-exp-card {
+  border-color: var(--border-strong);
+}
+
+.jm-exp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 24px;
+  align-items: start;
+}
+
+.jm-exp-label,
+.jm-sub-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.jm-exp-text {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.jm-exp-details {
+  margin: 18px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Education / cert sub-blocks */
+.jm-sub-block {
+  margin-bottom: 18px;
+}
+
+/* Projects */
+.jm-project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.jm-project-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.jm-project-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.jm-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.jm-project-evidence {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+/* Keywords */
+.jm-chip-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Requirements */
+.jm-req-list {
+  display: grid;
+  gap: 14px;
+}
+
+/* Improvements */
+.jm-improve-list {
+  display: grid;
+  gap: 12px;
+}
+
+.jm-improve-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 18px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.jm-improve-num {
+  font-size: 14px;
+  font-weight: 800;
+  color: #a5b4fc;
+  flex: none;
+  line-height: 1.5;
+}
+
+.jm-improve-text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-primary);
+}
+
+/* Loading */
+.jm-detail-loading {
+  display: grid;
+  gap: 20px;
+}
+
+.sk-hero {
+  height: 180px;
+  border-radius: var(--radius-lg);
+}
+
+.sk-section {
+  height: 140px;
+  border-radius: var(--radius-lg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .jm-skill-cols,
+  .jm-keyword-cols,
+  .jm-resp-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jm-project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .jm-exp-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .jm-two-col {
+    grid-template-columns: 1fr;
+  }
+}

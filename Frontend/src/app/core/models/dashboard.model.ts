@@ -60,10 +60,24 @@ export interface EducationItem {
   period: string;
 }
 
-export interface ImprovementSuggestion {
-  title: string;
-  description: string;
-  priority: 'high' | 'medium' | 'low';
+export interface ScoreBreakdown {
+  contentQuality: number;
+  experienceImpact: number;
+  skillsRelevance: number;
+  structureClarity: number;
+  projectsEducationCertifications: number;
+  professionalismConsistency: number;
+  completeness: number;
+}
+
+export interface AtsScoreBreakdown {
+  structure: number;
+  keywordTerminology: number;
+  experienceSkillsParsability: number;
+  formattingConsistency: number;
+  contentOrganization: number;
+  contactParsability: number;
+  dateConsistency: number;
 }
 
 export interface ResumeAnalysis {
@@ -75,10 +89,14 @@ export interface ResumeAnalysis {
   experience: ExperienceItem[];
   projects: ProjectItem[];
   education: EducationItem[];
+  scoreBreakdown: ScoreBreakdown;
+  scoreSummary: string;
   strengths: string[];
-  areasToImprove: string[];
-  missingKeywords: string[];
-  improvementSuggestions: ImprovementSuggestion[];
+  improvements: string[];
+  atsScoreBreakdown: AtsScoreBreakdown;
+  atsSummary: string;
+  atsStrengths: string[];
+  atsImprovements: string[];
 }
 
 export interface JobMatchResult {

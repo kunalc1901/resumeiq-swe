@@ -47,6 +47,13 @@ const appRoutes: Routes = [
           ),
       },
       {
+        path: 'job-match/:id',
+        loadComponent: () =>
+          import('./pages/dashboard/job-match/job-match-detail.component').then(
+            (m) => m.JobMatchDetailComponent,
+          ),
+      },
+      {
         path: 'resume-qa',
         loadComponent: () =>
           import('./pages/dashboard/resume-qa/resume-qa.component').then(
@@ -86,6 +93,20 @@ const appRoutes: Routes = [
         loadComponent: () =>
           import('./pages/dashboard/settings/settings.component').then(
             (m) => m.SettingsComponent,
+          ),
+      },
+      {
+        path: 'usage',
+        loadComponent: () =>
+          import('./pages/dashboard/usage/usage.component').then(
+            (m) => m.UsageComponent,
+          ),
+      },
+      {
+        path: 'upgrade',
+        loadComponent: () =>
+          import('./pages/dashboard/upgrade/upgrade.component').then(
+            (m) => m.UpgradeComponent,
           ),
       },
     ],

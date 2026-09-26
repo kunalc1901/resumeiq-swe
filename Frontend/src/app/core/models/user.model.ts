@@ -10,4 +10,6 @@ export interface User {
   password?: string;
   role: string;
   createdAt?: string;
+  /** Subscription plan id ('free' | 'premium'). Populated by the backend once available. */
+  plan?: string;
 }

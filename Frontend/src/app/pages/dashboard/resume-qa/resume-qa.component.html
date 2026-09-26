@@ -2,7 +2,13 @@
   <app-page-header
     title="Ask Your Resume"
     subtitle="Ask questions about your experience, skills and projects."
-  ></app-page-header>
+  >
+    <ng-container slot="actions">
+      <span class="tag" [class.tag-warn]="isLow" [class.tag-accent]="!isLow">
+        {{ questionsUsedLabel }} used this month
+      </span>
+    </ng-container>
+  </app-page-header>
 
   <div class="chat-card dash-card">
     <div class="chat-scroll dash-scroll">
@@ -59,20 +65,38 @@
       </div>
     </div>
 
+    <p class="qa-low-hint" *ngIf="isLow && canAsk">
+      Only {{ questionsRemaining }}
+      {{ questionsRemaining === 1 ? 'question' : 'questions' }} remaining this month.
+    </p>
+
     <form class="chat-input" (ngSubmit)="send()">
       <input
         type="text"
         name="question"
         class="chat-input-field"
-        placeholder="Ask something about your resume..."
+        [placeholder]="canAsk ? 'Ask something about your resume...' : 'Monthly Q&A limit reached'"
         [(ngModel)]="input"
         aria-label="Ask a question"
         autocomplete="off"
+        [disabled]="!canAsk"
       />
-      <button type="submit" class="btn btn-primary" [disabled]="!input.trim()">
+      <button type="submit" class="btn btn-primary" [disabled]="!input.trim() || !canAsk">
         <app-icon name="send" [size]="16" />
         <span class="send-label">Send</span>
       </button>
     </form>
+  </div>
+
+  <!-- Limit reached: conversation stays visible -->
+  <div class="qa-limit dash-section" *ngIf="!canAsk">
+    <app-usage-limit-card
+      icon="message-square"
+      title="You've reached your Free plan's monthly Q&A limit."
+      message="Upgrade to Premium for more Resume Q&A."
+      secondaryLabel="View Usage"
+      (upgrade)="goUpgrade()"
+      (secondary)="viewUsage()"
+    />
   </div>
 </div>

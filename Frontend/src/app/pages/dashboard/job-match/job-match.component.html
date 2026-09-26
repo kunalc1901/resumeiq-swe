@@ -1,11 +1,15 @@
 <div class="dash-page">
   <app-page-header
-    title="Match Your Resume With a Job"
-    subtitle="See how your experience aligns with a specific role."
+    title="Job Match"
+    subtitle="See how closely your resume aligns with a specific job opportunity."
   ></app-page-header>
 
   <!-- Form -->
-  <div class="jm-form dash-card dash-card-pad">
+  <div class="jm-form dash-card dash-card-pad" *ngIf="mode !== 'limit'">
+    <div class="jm-usage-row">
+      <span class="tag tag-accent">{{ matchesRemainingLabel }}</span>
+    </div>
+
     <div class="form-field">
       <label class="form-label" for="resume-select">Your Resume</label>
       <select id="resume-select" class="form-select" [(ngModel)]="selectedResume">
@@ -24,7 +28,7 @@
         placeholder="Paste the job description here..."
         [(ngModel)]="jdText"
       ></textarea>
-      <p class="form-hint error" *ngIf="errorMsg">{{ errorMsg }}</p>
+      <p class="form-hint error" *ngIf="analyzeError">{{ errorMsg }}</p>
     </div>
 
     <div class="form-actions">
@@ -40,6 +44,19 @@
     </div>
   </div>
 
+  <!-- Limit reached -->
+  <div class="dash-section" *ngIf="mode === 'limit'">
+    <app-usage-limit-card
+      icon="target"
+      title="You've reached your monthly Job Match limit."
+      message="Upgrade to Premium for 30 Job Matches per month."
+      [resetLabel]="resetLabel"
+      secondaryLabel="View Usage"
+      (upgrade)="goUpgrade()"
+      (secondary)="viewUsage()"
+    />
+  </div>
+
   <!-- Loading -->
   <div class="dash-section" *ngIf="mode === 'loading'">
     <app-analysis-loading
@@ -49,99 +66,44 @@
     ></app-analysis-loading>
   </div>
 
-  <!-- Results -->
-  <ng-container *ngIf="mode === 'done' && result">
-    <div class="dash-section result-section">
-      <div class="result-head">
-        <h2 class="section-heading">Match Result</h2>
-        <button type="button" class="btn btn-ghost btn-sm" (click)="reset()">
-          New Analysis
-        </button>
-      </div>
-
-      <div class="result-grid">
-        <div class="match-score dash-card dash-card-pad">
-          <app-score-ring [value]="result.score" [size]="132">
-            <div class="match-score-value">
-              <strong>{{ result.score }}</strong>
-              <span>%</span>
-            </div>
-          </app-score-ring>
-          <div>
-            <div class="match-score-label">Match Score</div>
-            <p class="match-score-note">
-              How well your resume aligns with the pasted job description.
-            </p>
-          </div>
-        </div>
-
-        <div class="result-col dash-card dash-card-pad">
-          <div class="result-col-title good">
-            <app-icon name="check" [size]="16" />
-            Matched Skills
-          </div>
-          <ul class="match-list">
-            <li *ngFor="let skill of result.matchedSkills">
-              <span class="match-check" aria-hidden="true">&#10003;</span>
-              {{ skill }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="result-col dash-card dash-card-pad">
-          <div class="result-col-title warn">
-            <app-icon name="alert-triangle" [size]="16" />
-            Missing / Weak Skills
-          </div>
-          <ul class="match-list">
-            <li *ngFor="let skill of result.missingSkills">
-              <span class="match-warn" aria-hidden="true">&#9888;</span>
-              {{ skill }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="match-detail dash-card dash-card-pad">
-          <div class="card-head">
-            <div>
-              <h2 class="card-title">Relevant Experience</h2>
-              <p class="card-sub">Sections of your resume that align with this role.</p>
-            </div>
-          </div>
-          <ul class="detail-list">
-            <li *ngFor="let exp of result.relevantExperience">
-              <app-icon name="briefcase" [size]="16" />
-              {{ exp }}
-            </li>
-          </ul>
-        </div>
-
-        <div class="match-detail dash-card dash-card-pad">
-          <div class="card-head">
-            <div>
-              <h2 class="card-title">Recommendations</h2>
-              <p class="card-sub">Actionable steps grounded in your resume.</p>
-            </div>
-          </div>
-          <ul class="detail-list">
-            <li *ngFor="let rec of result.recommendations">
-              <app-icon name="lightbulb" [size]="16" />
-              {{ rec }}
-            </li>
-          </ul>
-        </div>
+  <!-- Job Match History -->
+  <div class="dash-section">
+    <div class="section-row">
+      <div>
+        <h2 class="section-heading">Your Job Matches</h2>
+        <p class="section-sub">Review your previous resume-to-job analyses.</p>
       </div>
     </div>
-  </ng-container>
 
-  <!-- Empty state -->
-  <div class="dash-section" *ngIf="mode === 'idle'">
-    <app-empty-state
-      icon="target"
-      title="No job matches yet"
-      text="Paste a job description to see how your resume aligns."
-    >
-      <span class="empty-note">Start by pasting a job description above.</span>
-    </app-empty-state>
+    <!-- Loading -->
+    <div class="history-grid" *ngIf="historyLoading">
+      <div class="skeleton sk-history-card" *ngFor="let _ of [0, 1, 2]"></div>
+    </div>
+
+    <!-- Error -->
+    <div class="history-error dash-card dash-card-pad" *ngIf="historyError && !historyLoading">
+      <div class="history-error-icon" aria-hidden="true">
+        <app-icon name="alert-circle" [size]="20" />
+      </div>
+      <div class="history-error-body">
+        <h3 class="history-error-title">We couldn't load your job matches.</h3>
+        <p class="history-error-text">Please try again.</p>
+      </div>
+      <button type="button" class="btn btn-secondary" (click)="loadHistory()">Retry</button>
+    </div>
+
+    <!-- History cards -->
+    <div class="history-grid" *ngIf="!historyLoading && !historyError && history.length">
+      <app-job-match-card *ngFor="let match of history" [match]="match" />
+    </div>
+
+    <!-- Empty -->
+    <div class="dash-section" *ngIf="!historyLoading && !historyError && !history.length">
+      <app-empty-state
+        icon="target"
+        title="No job matches yet"
+        text="Your job matches will appear here. Analyze a job description to see how closely your resume aligns."
+      ></app-empty-state>
+    </div>
   </div>
 </div>

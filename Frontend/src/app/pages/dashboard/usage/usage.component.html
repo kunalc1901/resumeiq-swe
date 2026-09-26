@@ -1,0 +1,107 @@
+<div class="dash-page">
+  <app-page-header
+    title="Usage & Plan"
+    subtitle="Your ResumeIQ plan and this month's AI usage."
+  />
+
+  <!-- Error state -->
+  <div
+    class="usage-error dash-card dash-card-pad"
+    *ngIf="subscription.state.error && !subscription.state.loading"
+  >
+    <div class="usage-error-icon" aria-hidden="true">
+      <app-icon name="alert-circle" [size]="22" />
+    </div>
+    <div class="usage-error-body">
+      <h3 class="usage-error-title">We couldn't load your usage details.</h3>
+      <p class="usage-error-text">Please try again.</p>
+    </div>
+    <button type="button" class="btn btn-secondary" (click)="retry()">Retry</button>
+  </div>
+
+  <!-- Loading skeletons -->
+  <div class="usage-loading" *ngIf="subscription.state.loading">
+    <div class="skeleton sk-plan"></div>
+    <div class="usage-grid">
+      <div class="skeleton sk-card" *ngFor="let _ of [0, 1, 2, 3]"></div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="!subscription.state.loading && !subscription.state.error">
+    <!-- Plan summary -->
+    <div class="plan-summary dash-card dash-card-pad">
+      <div class="plan-summary-main">
+        <span class="section-label">Current Plan</span>
+        <div class="plan-summary-name">
+          <h2 class="plan-summary-title">{{ subscription.state.planLabel }}</h2>
+          <app-premium-badge *ngIf="subscription.state.premium" />
+        </div>
+        <p class="plan-summary-line">
+          Billing period: {{ subscription.billingPeriodLabel() }}
+        </p>
+        <p class="plan-summary-line">{{ subscription.resetLabel() }}</p>
+      </div>
+      <div class="plan-summary-actions">
+        <a
+          *ngIf="!subscription.state.premium"
+          routerLink="/dashboard/upgrade"
+          class="btn btn-primary"
+        >
+          <app-icon name="star" [size]="15" />
+          Upgrade to Premium
+        </a>
+        <a
+          *ngIf="subscription.state.premium"
+          routerLink="/dashboard/upgrade"
+          class="btn btn-secondary"
+        >
+          Manage Plan
+        </a>
+      </div>
+    </div>
+
+    <!-- Usage counters -->
+    <div class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Monthly usage</h2>
+      </div>
+      <div class="usage-grid">
+        <div class="usage-card dash-card dash-card-pad" *ngFor="let row of rows">
+          <div class="usage-card-head">
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon [name]="row.icon" [size]="16" />
+            </span>
+            <span
+              class="tag"
+              [class.tag-warn]="isWarning(row.kind)"
+              [class.tag-success]="!isWarning(row.kind) && !isExhausted(row.kind) && !subscription.state.premium"
+              [class.tag-accent]="!isWarning(row.kind) && !isExhausted(row.kind) && subscription.state.premium"
+            >
+              {{ subscription.remainingLabel(row.kind) }}
+            </span>
+          </div>
+          <app-usage-progress
+            [usage]="subscription.usageOf(row.kind)"
+            [label]="labelOf(row.kind)"
+            [unit]="unitOf(row.kind)"
+            [unitSingular]="unitSingularOf(row.kind)"
+          />
+          <p class="usage-warning" *ngIf="isWarning(row.kind)">
+            Only {{ subscription.remainingOf(row.kind) }}
+            {{ subscription.remainingOf(row.kind) === 1 ? unitSingularOf(row.kind) : unitOf(row.kind) }}
+            remaining this month.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty AI activity -->
+    <div class="dash-section" *ngIf="allAiZero">
+      <app-empty-state
+        icon="activity"
+        title="No AI activity yet"
+        text="Your ResumeIQ usage will appear here once you start analysing resumes."
+      ></app-empty-state>
+    </div>
+  </ng-container>
+</div>

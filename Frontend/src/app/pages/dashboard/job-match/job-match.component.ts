@@ -1,15 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DashboardService } from '../../../core/services/dashboard.service';
-import { JobMatchResult } from '../../../core/models/dashboard.model';
+import { Router } from '@angular/router';
+import { SubscriptionService } from '../../../core/services/subscription.service';
+import { JobMatchService } from '../../../core/services/job-match.service';
+import { FEATURE_IDS } from '../../../core/constants/feature-ids';
+import { JobMatch } from '../../../core/models/job-match.model';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
-import { ScoreRingComponent } from '../../../shared/score-ring/score-ring.component';
 import { AnalysisLoadingComponent } from '../../../shared/analysis-loading/analysis-loading.component';
 import { EmptyStateComponent } from '../../../shared/empty-state/empty-state.component';
+import { UsageLimitCardComponent } from '../../../shared/usage-limit-card/usage-limit-card.component';
+import { JobMatchCardComponent } from '../../../shared/job-match-card/job-match-card.component';
 
-type MatchMode = 'idle' | 'loading' | 'done';
+type MatchMode = 'idle' | 'loading' | 'limit';
 
 @Component({
   standalone: true,
@@ -18,20 +22,25 @@ type MatchMode = 'idle' | 'loading' | 'done';
     FormsModule,
     AppIconComponent,
     PageHeaderComponent,
-    ScoreRingComponent,
     AnalysisLoadingComponent,
     EmptyStateComponent,
+    UsageLimitCardComponent,
+    JobMatchCardComponent,
   ],
   selector: 'app-job-match',
   templateUrl: './job-match.component.html',
   styleUrls: ['./job-match.component.scss'],
 })
-export class JobMatchComponent {
+export class JobMatchComponent implements OnInit {
   mode: MatchMode = 'idle';
-  result: JobMatchResult | null = null;
   errorMsg = '';
+  analyzeError = false;
   selectedResume = 'Software_Engineer_Resume.pdf';
   jdText = '';
+
+  history: JobMatch[] = [];
+  historyLoading = true;
+  historyError = false;
 
   steps = [
     'Extracting resume content',
@@ -40,27 +49,80 @@ export class JobMatchComponent {
     'Preparing recommendations',
   ];
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private jobMatchService: JobMatchService,
+    public subscription: SubscriptionService,
+    private router: Router,
+  ) {}
+
+  ngOnInit(): void {
+    this.subscription.load();
+    this.loadHistory();
+  }
+
+  get matchesRemainingLabel(): string {
+    return this.subscription.remainingLabel('jobMatches');
+  }
+
+  get resetLabel(): string {
+    return this.subscription.resetLabel();
+  }
+
+  loadHistory(): void {
+    this.historyLoading = true;
+    this.historyError = false;
+    this.jobMatchService.getHistory().subscribe({
+      next: (matches) => {
+        this.history = matches;
+        this.historyLoading = false;
+      },
+      error: () => {
+        this.historyLoading = false;
+        this.historyError = true;
+      },
+    });
+  }
 
   analyze(): void {
+    if (!this.subscription.canUse(FEATURE_IDS.JOB_MATCH)) {
+      this.mode = 'limit';
+      return;
+    }
     if (!this.jdText.trim()) {
       this.errorMsg = 'Paste a job description to analyze.';
+      this.analyzeError = true;
       return;
     }
     this.errorMsg = '';
+    this.analyzeError = false;
     this.mode = 'loading';
-    this.result = null;
   }
 
   onLoadingComplete(): void {
-    this.dashboardService.getJobMatchResult().subscribe((r) => {
-      this.result = r;
-      this.mode = 'done';
+    this.jobMatchService.analyzeMatch(this.jdText).subscribe({
+      next: (match) => {
+        this.history = [match, ...this.history];
+        this.mode = 'idle';
+        this.subscription.consume('jobMatches');
+        this.router.navigate(['/dashboard/job-match', match.id]);
+      },
+      error: () => {
+        this.mode = 'idle';
+        this.errorMsg = "We couldn't complete the analysis. Please try again.";
+        this.analyzeError = true;
+      },
     });
   }
 
   reset(): void {
     this.mode = 'idle';
-    this.result = null;
+  }
+
+  goUpgrade(): void {
+    this.router.navigate(['/dashboard/upgrade']);
+  }
+
+  viewUsage(): void {
+    this.router.navigate(['/dashboard/usage']);
   }
 }

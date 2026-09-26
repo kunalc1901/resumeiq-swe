@@ -136,6 +136,8 @@
         </div>
       </nav>
 
+      <app-subscription-status [collapsed]="collapsed" />
+
       <div class="sidebar-footer">
         <button
           type="button"
@@ -200,4 +202,15 @@
       </a>
     </div>
   </nav>
+
+  <app-subscription-status />
 </aside>
+
+<!-- Page loader (shown on refresh / until data is ready) -->
+<app-loader
+  [visible]="showLoader"
+  [auto]="true"
+  [duration]="5000"
+  text="Preparing your workspace"
+  (complete)="onLoaderComplete()"
+/>

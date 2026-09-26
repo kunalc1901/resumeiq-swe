@@ -252,6 +252,17 @@
   color: var(--text-muted);
 }
 
+.qa-low-hint {
+  margin: 0;
+  padding: 0 24px 12px;
+  font-size: 12.5px;
+  color: #fcd34d;
+}
+
+.qa-limit {
+  margin-top: 24px;
+}
+
 @media (max-width: 560px) {
   .qa-page {
     min-height: calc(100vh - 102px);

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../../core/services';
+import { AuthService, SubscriptionService } from '../../../core/services';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { ActivityGroup, Insight, ResumeStatus, Stat } from '../../../core/models/dashboard.model';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
@@ -9,6 +9,8 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
 import { StatCardComponent } from '../../../shared/stat-card/stat-card.component';
 import { ScoreRingComponent } from '../../../shared/score-ring/score-ring.component';
 import { ProgressBarComponent } from '../../../shared/progress-bar/progress-bar.component';
+import { PremiumBadgeComponent } from '../../../shared/premium-badge/premium-badge.component';
+import { TruncateTitleDirective } from '../../../shared/truncate-title/truncate-title.directive';
 
 @Component({
   standalone: true,
@@ -20,6 +22,8 @@ import { ProgressBarComponent } from '../../../shared/progress-bar/progress-bar.
     StatCardComponent,
     ScoreRingComponent,
     ProgressBarComponent,
+    PremiumBadgeComponent,
+    TruncateTitleDirective,
   ],
   selector: 'app-dashboard-overview',
   templateUrl: './dashboard-overview.component.html',
@@ -44,9 +48,15 @@ export class DashboardOverviewComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     private authService: AuthService,
+    public subscription: SubscriptionService,
   ) {}
 
+  get isPremium(): boolean {
+    return this.subscription.isPremium();
+  }
+
   ngOnInit(): void {
+    this.subscription.load();
     const hour = new Date().getHours();
     this.greeting =
       hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';

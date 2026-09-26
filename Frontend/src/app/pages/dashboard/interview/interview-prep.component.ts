@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
+import { SubscriptionService } from '../../../core/services/subscription.service';
+import { FEATURE_IDS } from '../../../core/constants/feature-ids';
 import {
   InterviewEvaluation,
   InterviewQuestion,
@@ -10,8 +13,9 @@ import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { EmptyStateComponent } from '../../../shared/empty-state/empty-state.component';
 import { ProgressBarComponent } from '../../../shared/progress-bar/progress-bar.component';
+import { UsageLimitCardComponent } from '../../../shared/usage-limit-card/usage-limit-card.component';
 
-type InterviewPhase = 'setup' | 'intro' | 'answering' | 'evaluating';
+type InterviewPhase = 'setup' | 'intro' | 'answering' | 'evaluating' | 'limit';
 
 @Component({
   standalone: true,
@@ -22,6 +26,7 @@ type InterviewPhase = 'setup' | 'intro' | 'answering' | 'evaluating';
     PageHeaderComponent,
     EmptyStateComponent,
     ProgressBarComponent,
+    UsageLimitCardComponent,
   ],
   selector: 'app-interview-prep',
   templateUrl: './interview-prep.component.html',
@@ -45,7 +50,9 @@ export class InterviewPrepComponent {
 
   constructor(
     private dashboardService: DashboardService,
+    public subscription: SubscriptionService,
     private cdr: ChangeDetectorRef,
+    private router: Router,
   ) {}
 
   get currentQuestion(): InterviewQuestion | null {
@@ -56,13 +63,30 @@ export class InterviewPrepComponent {
     return String(this.currentIndex + 1).padStart(2, '0');
   }
 
+  get sessionsRemainingLabel(): string {
+    return this.subscription.remainingLabel('interviewSessions');
+  }
+
+  get canStart(): boolean {
+    return this.subscription.canUse(FEATURE_IDS.INTERVIEW_PREP);
+  }
+
+  get resetLabel(): string {
+    return this.subscription.resetLabel();
+  }
+
   startInterview(): void {
+    if (!this.canStart) {
+      this.phase = 'limit';
+      return;
+    }
     this.dashboardService.getInterviewQuestions().subscribe((qs) => {
       this.questions = qs;
       this.currentIndex = 0;
       this.answer = '';
       this.evaluation = null;
       this.phase = 'intro';
+      this.subscription.consume('interviewSessions');
     });
   }
 
@@ -100,5 +124,13 @@ export class InterviewPrepComponent {
     this.phase = 'setup';
     this.evaluation = null;
     this.answer = '';
+  }
+
+  goUpgrade(): void {
+    this.router.navigate(['/dashboard/upgrade']);
+  }
+
+  viewUsage(): void {
+    this.router.navigate(['/dashboard/usage']);
   }
 }

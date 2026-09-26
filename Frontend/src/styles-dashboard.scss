@@ -129,6 +129,12 @@
   border-color: rgba(56, 189, 248, 0.28);
 }
 
+.tag-danger {
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.1);
+  border-color: rgba(248, 113, 113, 0.28);
+}
+
 /* Section labels */
 .section-label {
   font-size: 12px;
@@ -424,7 +430,7 @@
 /* Chat scrollbars */
 .dash-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgba(151, 163, 190, 0.3) transparent;
+  scrollbar-color: #223052 transparent;
 }
 
 .dash-scroll::-webkit-scrollbar {
@@ -433,8 +439,15 @@
 }
 
 .dash-scroll::-webkit-scrollbar-thumb {
-  background: rgba(151, 163, 190, 0.3);
+  background: #223052;
+  border: 2px solid transparent;
   border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.dash-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+  box-shadow: 0 0 10px var(--glow-accent);
 }
 
 @media (prefers-reduced-motion: reduce) {

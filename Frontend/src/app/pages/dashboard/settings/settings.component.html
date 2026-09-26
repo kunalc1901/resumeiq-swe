@@ -92,6 +92,46 @@
       </div>
     </section>
 
+    <!-- Plan & Billing -->
+    <section class="settings-card dash-card dash-card-pad">
+      <div class="settings-head">
+        <span class="icon-tile icon-tile-sm" aria-hidden="true">
+          <app-icon name="star" [size]="16" />
+        </span>
+        <div>
+          <h2 class="card-title">Plan & Billing</h2>
+          <p class="card-sub">Your subscription and monthly AI usage.</p>
+        </div>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-text">
+          <div class="settings-row-title">{{ subscription.state.planLabel }}</div>
+          <div class="settings-row-sub">
+            {{ subscription.billingPeriodLabel() }} · {{ subscription.resetLabel() }}
+          </div>
+        </div>
+        <app-premium-badge *ngIf="isPremium" />
+      </div>
+      <div class="settings-actions">
+        <a
+          *ngIf="!isPremium"
+          routerLink="/dashboard/upgrade"
+          class="btn btn-primary"
+        >
+          <app-icon name="star" [size]="16" />
+          Upgrade to Premium
+        </a>
+        <a
+          *ngIf="isPremium"
+          routerLink="/dashboard/usage"
+          class="btn btn-secondary"
+        >
+          Manage Plan
+        </a>
+        <a routerLink="/dashboard/usage" class="btn btn-ghost">View Usage</a>
+      </div>
+    </section>
+
     <!-- Account -->
     <section class="settings-card dash-card dash-card-pad">
       <div class="settings-head">

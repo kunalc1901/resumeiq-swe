@@ -2,6 +2,73 @@
   max-width: 760px;
 }
 
+.jm-usage-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+}
+
+/* History */
+.history-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 1024px) {
+  .history-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .history-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sk-history-card {
+  height: 220px;
+  border-radius: var(--radius-lg);
+}
+
+.history-error {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.history-error-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.history-error-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-error-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--text-primary);
+}
+
+.history-error-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
 .form-actions {
   display: flex;
   align-items: center;

@@ -1,0 +1,109 @@
+<div class="dash-page">
+  <app-page-header
+    title="Unlock the full power of ResumeIQ"
+    subtitle="Go beyond basic analysis with deeper insights, more AI usage, and advanced career preparation."
+  />
+
+  <!-- Success state (only after a real/mock subscription change) -->
+  <div class="upgrade-success dash-card dash-card-pad" *ngIf="upgraded && isPremium">
+    <div class="upgrade-success-icon" aria-hidden="true">
+      <app-icon name="star" [size]="22" />
+    </div>
+    <div class="upgrade-success-body">
+      <h3 class="upgrade-success-title">Welcome to ResumeIQ Premium ✦</h3>
+      <p class="upgrade-success-text">Your Premium features are now available.</p>
+      <p class="upgrade-success-note" *ngIf="isMock">
+        Development mode: this simulates a completed subscription flow.
+      </p>
+    </div>
+    <a routerLink="/dashboard/usage" class="btn btn-secondary">View Usage</a>
+  </div>
+
+  <!-- Already premium -->
+  <div class="upgrade-premium dash-card dash-card-pad" *ngIf="!upgraded && isPremium">
+    <div class="upgrade-success-body">
+      <h3 class="upgrade-success-title">You're on ResumeIQ Premium ✦</h3>
+      <p class="upgrade-success-text">
+        Higher AI usage, more resume storage and advanced features are active on your account.
+      </p>
+    </div>
+    <a routerLink="/dashboard/usage" class="btn btn-secondary">Manage Plan</a>
+  </div>
+
+  <ng-container *ngIf="!isPremium">
+    <!-- Plan cards -->
+    <div class="plans-grid">
+      <app-plan-card
+        [plan]="freePlan()"
+        [features]="freeFeatures()"
+        [current]="!isPremium"
+        [highlight]="false"
+        ctaLabel="Continue with Free"
+        (cta)="continueWithFree()"
+      />
+      <app-plan-card
+        [plan]="premiumPlan()"
+        [features]="premiumFeatures()"
+        [highlight]="true"
+        [current]="false"
+        [disabled]="isPremium"
+        ctaLabel="Upgrade to Premium"
+        (cta)="openCheckout()"
+      />
+    </div>
+
+    <!-- Comparison table -->
+    <div class="dash-section">
+      <h2 class="section-heading">Compare plans</h2>
+      <div class="compare-card dash-card">
+        <div class="compare-row compare-head">
+          <span class="compare-label">Feature</span>
+          <span class="compare-col">Free</span>
+          <span class="compare-col premium-col">Premium</span>
+        </div>
+        <div class="compare-row" *ngFor="let row of comparison">
+          <span class="compare-label">{{ row.label }}</span>
+          <span class="compare-col">{{ row.free }}</span>
+          <span class="compare-col premium-col">
+            {{ row.premium }}
+            <span
+              class="tag tag-accent"
+              *ngIf="row.premiumBadge === 'included'"
+            >Included</span>
+            <span class="tag tag-info" *ngIf="row.premiumBadge === 'comingSoon'"
+              >Coming Soon</span
+            >
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- Checkout placeholder (no payment integration yet) -->
+  <div class="checkout-panel dash-card dash-card-pad" *ngIf="checkoutOpen">
+    <div class="checkout-icon" aria-hidden="true">
+      <app-icon name="shield" [size]="24" />
+    </div>
+    <h3 class="checkout-title">Premium is coming soon.</h3>
+    <p class="checkout-text">
+      We're preparing secure subscription payments for ResumeIQ. You'll be able to
+      upgrade without leaving this page once payments are live.
+    </p>
+
+    <div class="checkout-actions">
+      <button type="button" class="btn btn-secondary" (click)="closeCheckout()">
+        Back
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="upgrading"
+        *ngIf="isMock"
+        (click)="simulateUpgrade()"
+      >
+        <app-icon name="star" [size]="15" />
+        {{ upgrading ? 'Upgrading...' : 'Simulate upgrade (development only)' }}
+      </button>
+    </div>
+  </div>
+</div>

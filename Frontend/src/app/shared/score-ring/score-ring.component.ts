@@ -55,6 +55,12 @@ import { Component, Input } from '@angular/core';
         stroke-linecap: round;
         stroke-dasharray: var(--ring-circ);
         transition: stroke-dashoffset 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+        animation: ringFill 1.1s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      }
+      @keyframes ringFill {
+        from {
+          stroke-dashoffset: var(--ring-circ);
+        }
       }
       .score-ring-content {
         position: absolute;
@@ -76,14 +82,9 @@ export class ScoreRingComponent {
 
   readonly circumference = 2 * Math.PI * 52;
 
-  private ready = false;
-
-  ngOnInit(): void {
-    setTimeout(() => (this.ready = true), 50);
-  }
-
   get dashOffset(): number {
-    const pct = Math.max(0, Math.min(100, (this.value / this.max) * 100));
-    return this.ready ? this.circumference * (1 - pct / 100) : this.circumference;
+    const raw = (this.value / this.max) * 100;
+    const pct = Number.isFinite(raw) ? Math.max(0, Math.min(100, raw)) : 0;
+    return this.circumference * (1 - pct / 100);
   }
 }

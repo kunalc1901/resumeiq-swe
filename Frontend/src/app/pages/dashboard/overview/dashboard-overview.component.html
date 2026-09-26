@@ -4,20 +4,32 @@
     subtitle="Here's an overview of your resume and career readiness."
   >
     <ng-container slot="actions">
+      <app-premium-badge *ngIf="isPremium" />
       <a routerLink="/dashboard/resume" class="btn btn-primary">Analyze New Resume</a>
     </ng-container>
   </app-page-header>
 
-  <!-- Resume status -->
+  <!-- Last analyzed resume -->
   <div class="resume-card dash-card" *ngIf="resumeStatus">
+    <div class="card-head">
+      <div>
+        <h2 class="card-title">Last Analyzed Resume</h2>
+        <p class="card-sub">The resume shown in your analysis views.</p>
+      </div>
+      <span class="tag tag-accent">
+        <app-icon name="clock" [size]="13" />
+        Last analyzed {{ resumeStatus.lastAnalyzed }}
+      </span>
+    </div>
+
     <div class="resume-card-main">
       <div class="resume-file">
         <span class="icon-tile" aria-hidden="true">
           <app-icon name="file-text" [size]="20" />
         </span>
         <div class="resume-file-meta">
-          <div class="resume-file-name">{{ resumeStatus.fileName }}</div>
-          <div class="resume-file-sub">Last analyzed: {{ resumeStatus.lastAnalyzed }}</div>
+          <div class="resume-file-name" appTruncateTitle>{{ resumeStatus.fileName }}</div>
+          <div class="resume-file-sub">Your default resume for analysis.</div>
         </div>
       </div>
 
@@ -41,8 +53,10 @@
     </div>
 
     <div class="resume-actions">
-      <a routerLink="/dashboard/resume" class="btn btn-ghost">View Analysis</a>
-      <a routerLink="/dashboard/resume" class="btn btn-primary">Analyze Again</a>
+      <a routerLink="/dashboard/resume" class="btn btn-ghost">
+        <app-icon name="arrow-right" [size]="15" />
+        View Analysis
+      </a>
     </div>
   </div>
 

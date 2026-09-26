@@ -1,3 +1,313 @@
+.resume-slots-label {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Marketing: tailored resumes */
+.slots-marketing {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 24px;
+  border-color: rgba(129, 140, 248, 0.28);
+  background: linear-gradient(
+    160deg,
+    rgba(99, 102, 241, 0.05),
+    var(--bg-card) 55%
+  );
+}
+
+.slots-marketing-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: #a5b4fc;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.18),
+    rgba(139, 92, 246, 0.14)
+  );
+  border: 1px solid rgba(129, 140, 248, 0.3);
+}
+
+.slots-marketing-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.slots-marketing-badge {
+  margin-bottom: 8px;
+}
+
+.slots-marketing-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: var(--text-primary);
+}
+
+.slots-marketing-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin: 0;
+  max-width: 640px;
+}
+
+.slots-marketing-foot {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c7d2fe;
+  margin: 10px 0 0;
+}
+
+.slots-marketing-cta {
+  flex: none;
+  margin-top: 6px;
+}
+
+@media (max-width: 640px) {
+  .slots-marketing {
+    flex-direction: column;
+  }
+
+  .slots-marketing-cta {
+    width: 100%;
+  }
+}
+
+/* Horizontal slot strip */
+.slot-strip {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding: 4px 4px 14px;
+  scroll-snap-type: x proximity;
+  scrollbar-width: thin;
+  scrollbar-color: #223052 transparent;
+}
+
+.slot-strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slot-strip::-webkit-scrollbar-thumb {
+  background: #223052;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+.slot-card {
+  flex: 0 0 auto;
+  width: 232px;
+  min-height: 168px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  scroll-snap-align: start;
+  cursor: pointer;
+  transition: transform 0.22s ease, border-color 0.22s ease,
+    background-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.slot-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(129, 140, 248, 0.3);
+  background: var(--bg-card-hover);
+}
+
+.slot-card.selected {
+  border-color: rgba(129, 140, 248, 0.5);
+  background: linear-gradient(
+    160deg,
+    rgba(99, 102, 241, 0.1),
+    var(--bg-card) 55%
+  );
+  box-shadow: 0 0 24px -12px var(--glow-accent);
+}
+
+.slot-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.slot-file {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.slot-meta {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.slot-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.slot-score {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.slot-score strong {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.slot-score-unit {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.slot-analyzed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.slot-delete {
+  margin-left: auto;
+  width: 34px;
+  height: 34px;
+  color: var(--text-muted);
+}
+
+.slot-delete:hover {
+  color: #fca5a5;
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+/* Add slot */
+.slot-add {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-style: dashed;
+  border-color: var(--border-strong);
+  background: rgba(255, 255, 255, 0.015);
+  color: var(--text-secondary);
+}
+
+.slot-add:hover {
+  border-color: rgba(129, 140, 248, 0.45);
+  color: var(--text-primary);
+}
+
+.slot-add-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: #a5b4fc;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.18),
+    rgba(139, 92, 246, 0.14)
+  );
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  margin-bottom: 6px;
+}
+
+.slot-add-label {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.slot-add-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Locked premium slot */
+.slot-locked {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-style: dashed;
+  border-color: rgba(129, 140, 248, 0.32);
+  background: linear-gradient(
+    160deg,
+    rgba(99, 102, 241, 0.05),
+    var(--bg-card) 55%
+  );
+}
+
+.slot-locked:hover {
+  border-color: rgba(129, 140, 248, 0.55);
+  box-shadow: 0 0 24px -12px var(--glow-accent);
+}
+
+.slot-locked-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  margin-bottom: 6px;
+}
+
+.slot-locked-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.slot-locked-sub {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  max-width: 180px;
+}
+
+.slot-empty-hint {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slot-card {
+    transition: none;
+  }
+}
+
 .scores-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
@@ -190,15 +500,14 @@
   margin-top: 4px;
 }
 
-/* Strengths / improve */
+/* Strengths / improvements */
 .two-col {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
-.check-list,
-.warn-list {
+.check-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -206,8 +515,7 @@
   gap: 12px;
 }
 
-.check-list li,
-.warn-list li {
+.check-list li {
   display: flex;
   gap: 10px;
   align-items: baseline;
@@ -223,51 +531,78 @@
   flex: none;
 }
 
-.warn-list li::before {
-  content: '\26A0';
-  color: #fbbf24;
-  flex: none;
+/* Improvement items (detailed explanations) */
+.improve-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
 }
 
-/* Keywords */
-.keyword-tags {
+.improve-list li {
+  position: relative;
+  padding-left: 24px;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.improve-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--grad-accent);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+/* Score breakdown charts */
+.breakdown-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.breakdown-list {
+  display: grid;
+  gap: 16px;
+}
+
+.breakdown-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 8px;
 }
 
-/* Suggestions */
-.suggestion-list {
-  display: grid;
-  gap: 14px;
+.breakdown-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.suggestion {
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 16px;
-  align-items: start;
-  padding: 14px;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  background: rgba(255, 255, 255, 0.02);
+.breakdown-label {
+  font-size: 13.5px;
+  color: var(--text-secondary);
 }
 
-.suggestion-title {
-  font-size: 14.5px;
+.breakdown-value {
+  font-size: 13px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
-.suggestion-desc {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 4px 0 0;
-}
-
 @media (max-width: 1024px) {
   .scores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .breakdown-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -275,10 +610,5 @@
 @media (max-width: 900px) {
   .two-col {
     grid-template-columns: 1fr;
-  }
-
-  .suggestion {
-    grid-template-columns: 1fr;
-    gap: 10px;
   }
 }

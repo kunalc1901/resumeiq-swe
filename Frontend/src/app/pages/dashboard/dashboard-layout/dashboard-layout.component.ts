@@ -2,7 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
-import { AuthService } from '../../../core/services';
+import { SubscriptionStatusComponent } from '../../../shared/subscription-status/subscription-status.component';
+import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { AuthService, SubscriptionService } from '../../../core/services';
 
 interface NavItem {
   label: string;
@@ -17,12 +19,13 @@ interface NavGroup {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RouterModule, AppIconComponent],
+  imports: [CommonModule, RouterModule, AppIconComponent, SubscriptionStatusComponent, LoaderComponent],
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   styleUrls: ['./dashboard-layout.component.scss'],
 })
 export class DashboardLayoutComponent implements OnInit {
+  showLoader = true;
   navGroups: NavGroup[] = [
     {
       label: 'Main',
@@ -40,6 +43,10 @@ export class DashboardLayoutComponent implements OnInit {
         { label: 'Resume Improvement', route: '/dashboard/improve', icon: 'sparkles' },
         { label: 'Skill Gaps', route: '/dashboard/skill-gaps', icon: 'trending-up' },
       ],
+    },
+    {
+      label: 'Account',
+      items: [{ label: 'Usage & Plan', route: '/dashboard/usage', icon: 'activity' }],
     },
   ];
 
@@ -59,13 +66,21 @@ export class DashboardLayoutComponent implements OnInit {
   private lastName = 'Doe';
   email = 'john.doe@resumeiq.dev';
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private subscriptionService: SubscriptionService,
+  ) {}
 
   ngOnInit(): void {
+    this.subscriptionService.load();
     this.user = this.authService.getUser();
     this.firstName = this.user?.first_name || 'John';
     this.lastName = this.user?.last_name || 'Doe';
     this.email = this.user?.email || 'john.doe@resumeiq.dev';
+  }
+
+  onLoaderComplete(): void {
+    this.showLoader = false;
   }
 
   get fullName(): string {

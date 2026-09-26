@@ -6,6 +6,10 @@
 
   <!-- Setup -->
   <div class="setup-card dash-card dash-card-pad" *ngIf="phase === 'setup'">
+    <div class="interview-usage-row">
+      <span class="tag tag-accent">{{ sessionsRemainingLabel }} this month</span>
+    </div>
+
     <div class="form-field">
       <span class="form-label">Interview type</span>
       <div class="chip-group">
@@ -65,8 +69,21 @@
     ></app-empty-state>
   </div>
 
+  <!-- Limit reached -->
+  <div class="dash-section" *ngIf="phase === 'limit'">
+    <app-usage-limit-card
+      icon="mic"
+      title="You've reached your monthly Interview session limit."
+      message="Upgrade to Premium for 10 Interview sessions per month. You can still review your completed sessions."
+      [resetLabel]="resetLabel"
+      secondaryLabel="View Usage"
+      (upgrade)="goUpgrade()"
+      (secondary)="viewUsage()"
+    />
+  </div>
+
   <!-- Interview mode -->
-  <ng-container *ngIf="phase !== 'setup'">
+  <ng-container *ngIf="phase !== 'setup' && phase !== 'limit'">
     <div class="interview-card dash-card">
       <div class="interview-top">
         <div class="interview-meta">

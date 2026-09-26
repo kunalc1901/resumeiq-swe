@@ -2,7 +2,12 @@
   <app-page-header
     title="Improve Your Resume"
     subtitle="Turn AI insights into stronger resume content."
-  ></app-page-header>
+  >
+    <ng-container slot="actions">
+      <app-premium-badge *ngIf="isPremium" />
+      <span class="tag tag-accent" *ngIf="!isPremium">Free plan — limited access</span>
+    </ng-container>
+  </app-page-header>
 
   <ng-container *ngIf="data">
     <div class="improve-note dash-card dash-card-pad">
@@ -91,4 +96,27 @@
       </app-collapsible-section>
     </section>
   </ng-container>
+
+  <!-- Premium feature: advanced improvement (not implemented yet) -->
+  <div class="dash-section" *ngIf="!isPremium">
+    <div class="premium-lock dash-card dash-card-pad">
+      <div class="premium-lock-icon" aria-hidden="true">
+        <app-icon name="sparkles" [size]="22" />
+      </div>
+      <div class="premium-lock-body">
+        <h3 class="premium-lock-title">Advanced Resume Improvement</h3>
+        <p class="premium-lock-text">
+          Get deeper, context-aware suggestions for improving your summary,
+          experience and project descriptions.
+        </p>
+        <div class="premium-lock-badges">
+          <app-premium-badge />
+          <span class="tag tag-info">Coming Soon</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="explorePremium()">
+        Explore Premium
+      </button>
+    </div>
+  </div>
 </div>

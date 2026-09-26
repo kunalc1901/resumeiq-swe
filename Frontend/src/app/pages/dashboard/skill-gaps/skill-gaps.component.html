@@ -2,7 +2,12 @@
   <app-page-header
     title="Skill Gap Analysis"
     subtitle="Understand which skills could strengthen your profile."
-  ></app-page-header>
+  >
+    <ng-container slot="actions">
+      <app-premium-badge *ngIf="isPremium" />
+      <span class="tag" *ngIf="!isPremium">Basic access</span>
+    </ng-container>
+  </app-page-header>
 
   <ng-container *ngIf="data">
     <div class="skills-compare-grid">

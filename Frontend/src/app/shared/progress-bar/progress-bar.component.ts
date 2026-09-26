@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
+export type ProgressTone = 'accent' | 'warn' | 'danger' | 'success';
+
 @Component({
   standalone: true,
   imports: [CommonModule],
@@ -13,7 +15,9 @@ import { Component, Input } from '@angular/core';
         <strong class="progress-value" *ngIf="showValue">{{ value }}%</strong>
       </div>
       <div class="progress-track">
-        <span class="progress-fill" [style.width]="widthPct"></span>
+        <span class="progress-fill" [class.fill-warn]="tone === 'warn'"
+          [class.fill-danger]="tone === 'danger'" [class.fill-success]="tone === 'success'"
+          [style.width]="widthPct"></span>
       </div>
     </div>
   `,
@@ -49,6 +53,21 @@ import { Component, Input } from '@angular/core';
         border-radius: 999px;
         background: var(--grad-accent);
         transition: width 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+        animation: progressFill 1.1s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+      }
+      .progress-fill.fill-warn {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+      }
+      .progress-fill.fill-danger {
+        background: linear-gradient(90deg, #ef4444, #f87171);
+      }
+      .progress-fill.fill-success {
+        background: linear-gradient(90deg, #10b981, #34d399);
+      }
+      @keyframes progressFill {
+        from {
+          width: 0;
+        }
       }
     `,
   ],
@@ -59,15 +78,11 @@ export class ProgressBarComponent {
   @Input() label = '';
   @Input() showValue = true;
   @Input() ariaLabel = '';
-
-  private ready = false;
-
-  ngOnInit(): void {
-    setTimeout(() => (this.ready = true), 80);
-  }
+  @Input() tone: ProgressTone = 'accent';
 
   get widthPct(): string {
-    const pct = Math.max(0, Math.min(100, (this.value / this.max) * 100));
-    return this.ready ? pct + '%' : '0%';
+    const raw = (this.value / this.max) * 100;
+    const pct = Number.isFinite(raw) ? Math.max(0, Math.min(100, raw)) : 0;
+    return pct + '%';
   }
 }

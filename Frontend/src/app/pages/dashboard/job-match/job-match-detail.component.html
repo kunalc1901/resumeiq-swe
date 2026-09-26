@@ -1,0 +1,436 @@
+<div class="dash-page">
+  <!-- Loading -->
+  <div class="jm-detail-loading" *ngIf="loading">
+    <div class="skeleton sk-hero"></div>
+    <div class="skeleton sk-section"></div>
+    <div class="skeleton sk-section"></div>
+  </div>
+
+  <!-- Not found -->
+  <div class="dash-section" *ngIf="!loading && notFound">
+    <app-empty-state
+      icon="search"
+      title="Job match not found"
+      text="This analysis is no longer available or the link is incorrect."
+    >
+      <a routerLink="/dashboard/job-match" class="btn btn-primary">Back to Job Matches</a>
+    </app-empty-state>
+  </div>
+
+  <ng-container *ngIf="!loading && match">
+    <div class="jm-detail-top">
+      <a routerLink="/dashboard/job-match" class="btn btn-ghost btn-sm">
+        <app-icon name="chevron-left" [size]="15" />
+        Back to Job Matches
+      </a>
+      <span class="tag tag-accent" *ngIf="match.analyzedAt">Analyzed {{ match.analyzedAt }}</span>
+    </div>
+
+    <!-- Hero / overview -->
+    <section class="jm-hero dash-card dash-card-pad">
+      <div class="jm-hero-main">
+        <app-score-ring [value]="match.matchScore" [size]="148">
+          <div class="jm-hero-score">
+            <strong>{{ match.matchScore }}</strong>
+            <span>/100</span>
+          </div>
+        </app-score-ring>
+
+        <div class="jm-hero-meta">
+          <span class="section-label">Job Match</span>
+          <h1 class="jm-hero-title">{{ match.job.title }}</h1>
+          <div class="jm-hero-tags">
+            <span class="tag tag-accent">{{ match.job.seniority }}</span>
+            <span class="tag tag-accent">{{ label }}</span>
+          </div>
+          <p class="jm-hero-summary">{{ match.job.summary }}</p>
+          <p class="jm-hero-sentence">{{ sentence }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Score breakdown -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Match Breakdown</h2>
+      </div>
+      <div class="jm-breakdown-grid">
+        <div class="jm-breakdown-card dash-card dash-card-pad" *ngFor="let row of breakdownRows">
+          <div class="jm-breakdown-head">
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon [name]="row.icon" [size]="16" />
+            </span>
+            <span class="jm-breakdown-pct">{{ scorePercent(row.score, row.maxScore) }}%</span>
+          </div>
+          <div class="jm-breakdown-title">{{ row.title }}</div>
+          <div class="jm-breakdown-value">{{ row.score }} / {{ row.maxScore }}</div>
+          <app-progress-bar
+            [value]="row.score"
+            [max]="row.maxScore"
+            [showValue]="false"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Strengths + Critical gaps -->
+    <div class="jm-two-col dash-section">
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Why Your Resume Matches</h2>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="check" [size]="16" />
+          </span>
+        </div>
+        <ul class="jm-check-list">
+          <li *ngFor="let item of match.strengths">{{ item }}</li>
+        </ul>
+      </section>
+
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Critical Gaps</h2>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="alert-triangle" [size]="16" />
+          </span>
+        </div>
+        <ul class="jm-gap-list">
+          <li *ngFor="let item of match.criticalGaps">
+            <app-icon name="alert-triangle" [size]="15" />
+            <span>{{ item }}</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Skills match -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Skills Match</h2>
+      </div>
+      <div class="jm-skill-cols">
+        <div class="dash-card dash-card-pad jm-skill-col">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Matched Skills</h2>
+              <p class="card-sub">{{ match.skills.matched.length }} matched</p>
+            </div>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="check" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-skill-item" *ngFor="let s of match.skills.matched">
+            <div class="jm-skill-head">
+              <span class="jm-skill-name">{{ s.skill }}</span>
+              <span class="tag" [class]="tagClassFor(matchTypeInfo(s.matchType).tone)">
+                {{ matchTypeInfo(s.matchType).label }}
+              </span>
+              <span class="tag" [class]="tagClassFor(importanceInfo(s.importance).tone)">
+                {{ importanceInfo(s.importance).label }}
+              </span>
+            </div>
+            <p class="jm-skill-evidence">Evidence: {{ s.resumeEvidence }}</p>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.skills.matched.length">
+            No fully matched skills.
+          </p>
+        </div>
+
+        <div class="dash-card dash-card-pad jm-skill-col">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Partial Skills</h2>
+              <p class="card-sub">{{ match.skills.partial.length }} partially matched</p>
+            </div>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="sparkles" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-skill-item" *ngFor="let s of match.skills.partial">
+            <div class="jm-skill-head">
+              <span class="jm-skill-name">{{ s.skill }}</span>
+              <span class="tag" [class]="tagClassFor(matchTypeInfo(s.matchType).tone)">
+                {{ matchTypeInfo(s.matchType).label }}
+              </span>
+              <span class="tag" [class]="tagClassFor(importanceInfo(s.importance).tone)">
+                {{ importanceInfo(s.importance).label }}
+              </span>
+            </div>
+            <p class="jm-skill-evidence">Evidence: {{ s.resumeEvidence }}</p>
+            <p class="jm-skill-gap" *ngIf="s.gap">Gap: {{ s.gap }}</p>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.skills.partial.length">
+            No partial skill matches found.
+          </p>
+        </div>
+
+        <div class="dash-card dash-card-pad jm-skill-col">
+          <div class="card-head">
+            <div>
+              <h2 class="card-title">Missing Skills</h2>
+              <p class="card-sub">{{ match.skills.missing.length }} missing</p>
+            </div>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="alert-circle" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-skill-item" *ngFor="let s of match.skills.missing">
+            <div class="jm-skill-head">
+              <span class="jm-skill-name">{{ s.skill }}</span>
+              <span class="tag" [class]="tagClassFor(importanceInfo(s.importance).tone)">
+                {{ importanceInfo(s.importance).label }}
+              </span>
+            </div>
+            <p class="jm-skill-reason"><strong>Why:</strong> {{ s.reason }}</p>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.skills.missing.length">
+            No missing skills.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Responsibilities -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Responsibilities</h2>
+      </div>
+      <div class="jm-resp-grid">
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Matched</h2>
+            <span class="tag tag-success">{{ match.responsibilities.matched.length }}</span>
+          </div>
+          <div class="jm-resp-item" *ngFor="let r of match.responsibilities.matched">
+            <div class="jm-resp-title">{{ r.responsibility }}</div>
+            <span class="tag" [class]="tagClassFor(matchStrengthInfo(r.matchStrength).tone)">
+              {{ matchStrengthInfo(r.matchStrength).label }}
+            </span>
+            <p class="jm-resp-evidence">Evidence: {{ r.resumeEvidence }}</p>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.responsibilities.matched.length">
+            No matched responsibilities.
+          </p>
+        </div>
+
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Partial Matches</h2>
+            <span class="tag tag-warn">{{ match.responsibilities.partial.length }}</span>
+          </div>
+          <div class="jm-resp-item" *ngFor="let r of match.responsibilities.partial">
+            <div class="jm-resp-title">{{ r.responsibility }}</div>
+            <p class="jm-resp-evidence">Evidence: {{ r.resumeEvidence }}</p>
+            <p class="jm-skill-gap" *ngIf="r.gap">Gap: {{ r.gap }}</p>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.responsibilities.partial.length">
+            No partial responsibility matches found.
+          </p>
+        </div>
+
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Missing</h2>
+            <span class="tag tag-danger">{{ match.responsibilities.missing.length }}</span>
+          </div>
+          <div class="jm-resp-item" *ngFor="let r of match.responsibilities.missing">
+            <div class="jm-resp-title">{{ r.responsibility }}</div>
+            <span class="tag" [class]="tagClassFor(importanceInfo(r.importance).tone)">
+              {{ importanceInfo(r.importance).label }} importance
+            </span>
+          </div>
+          <p class="jm-empty-note" *ngIf="!match.responsibilities.missing.length">
+            No missing responsibilities.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience match -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Experience Match</h2>
+      </div>
+      <div class="jm-exp-card dash-card dash-card-pad">
+        <div class="jm-exp-grid">
+          <div class="jm-exp-block">
+            <span class="jm-exp-label">Job Requirement</span>
+            <p class="jm-exp-text">{{ match.experience.requiredExperience }}</p>
+          </div>
+          <div class="jm-exp-block">
+            <span class="jm-exp-label">Resume Evidence</span>
+            <p class="jm-exp-text">{{ match.experience.resumeExperienceEvidence }}</p>
+          </div>
+          <div class="jm-exp-block">
+            <span class="jm-exp-label">Status</span>
+            <span class="tag" [class]="tagClassFor(matchStatusInfo(match.experience.status).tone)">
+              <app-icon [name]="matchStatusInfo(match.experience.status).icon" [size]="13" />
+              {{ matchStatusInfo(match.experience.status).label }}
+            </span>
+          </div>
+        </div>
+        <p class="jm-exp-details">{{ match.experience.details }}</p>
+      </div>
+    </section>
+
+    <!-- Education + Certifications -->
+    <div class="jm-two-col dash-section">
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Education</h2>
+          <span class="tag" [class]="tagClassFor(matchStatusInfo(match.education.status).tone)">
+            {{ matchStatusInfo(match.education.status).label }}
+          </span>
+        </div>
+        <div class="jm-sub-block">
+          <span class="jm-sub-label">Matched Requirements</span>
+          <ul class="jm-check-list">
+            <li *ngFor="let item of match.education.matchedRequirements">{{ item }}</li>
+          </ul>
+          <p class="jm-empty-note" *ngIf="!match.education.matchedRequirements.length">
+            No matched education requirements.
+          </p>
+        </div>
+        <div class="jm-sub-block">
+          <span class="jm-sub-label">Missing Requirements</span>
+          <ul class="jm-gap-list">
+            <li *ngFor="let item of match.education.missingRequirements">
+              <app-icon name="alert-triangle" [size]="15" />
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+          <p class="jm-empty-note" *ngIf="!match.education.missingRequirements.length">
+            No missing education requirements.
+          </p>
+        </div>
+      </section>
+
+      <section class="dash-card dash-card-pad">
+        <div class="card-head">
+          <h2 class="card-title">Certifications</h2>
+          <span class="icon-tile icon-tile-sm" aria-hidden="true">
+            <app-icon name="shield" [size]="16" />
+          </span>
+        </div>
+        <div class="jm-sub-block">
+          <span class="jm-sub-label">Matched</span>
+          <ul class="jm-check-list">
+            <li *ngFor="let item of match.certifications.matched">{{ item }}</li>
+          </ul>
+        </div>
+        <div class="jm-sub-block">
+          <span class="jm-sub-label">Missing</span>
+          <ul class="jm-gap-list">
+            <li *ngFor="let item of match.certifications.missing">
+              <app-icon name="alert-triangle" [size]="15" />
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+        </div>
+        <p class="jm-empty-note" *ngIf="!match.certifications.matched.length && !match.certifications.missing.length">
+          No certification requirements identified.
+        </p>
+      </section>
+    </div>
+
+    <!-- Relevant projects -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Relevant Projects</h2>
+      </div>
+      <div class="jm-project-grid">
+        <article class="dash-card dash-card-pad" *ngFor="let p of match.projects">
+          <div class="jm-project-head">
+            <h3 class="jm-project-name">{{ p.projectName }}</h3>
+            <span class="tag" [class]="tagClassFor(relevanceInfo(p.relevance).tone)">
+              <app-icon [name]="relevanceInfo(p.relevance).icon" [size]="13" />
+              {{ relevanceInfo(p.relevance).label }} relevance
+            </span>
+          </div>
+          <div class="jm-project-tags">
+            <span class="tag tag-accent" *ngFor="let req of p.matchedRequirements">{{ req }}</span>
+          </div>
+          <p class="jm-project-evidence">{{ p.resumeEvidence }}</p>
+        </article>
+      </div>
+      <p class="jm-empty-note" *ngIf="!match.projects.length">No relevant projects identified.</p>
+    </section>
+
+    <!-- Keyword analysis -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Keyword Analysis</h2>
+      </div>
+      <div class="jm-keyword-cols">
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Exact Matches</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="search" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-chip-wrap">
+            <span class="tag tag-success" *ngFor="let k of match.keywordAnalysis.exactMatches">
+              <app-icon name="check" [size]="12" /> {{ k }}
+            </span>
+          </div>
+        </div>
+
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Semantic Matches</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="sparkles" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-chip-wrap">
+            <span class="tag tag-accent" *ngFor="let k of match.keywordAnalysis.semanticMatches">
+              <app-icon name="sparkles" [size]="12" /> {{ k }}
+            </span>
+          </div>
+        </div>
+
+        <div class="dash-card dash-card-pad">
+          <div class="card-head">
+            <h2 class="card-title">Missing Important Keywords</h2>
+            <span class="icon-tile icon-tile-sm" aria-hidden="true">
+              <app-icon name="alert-circle" [size]="16" />
+            </span>
+          </div>
+          <div class="jm-chip-wrap">
+            <span class="tag tag-danger" *ngFor="let k of match.keywordAnalysis.missingImportantKeywords">
+              <app-icon name="x" [size]="12" /> {{ k }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Requirement analysis -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">Requirement Analysis</h2>
+        <p class="section-sub">Requirement-by-requirement review against your resume.</p>
+      </div>
+      <div class="jm-req-list">
+        <app-job-match-requirement
+          *ngFor="let req of match.requirementAnalysis"
+          [requirement]="req"
+        />
+      </div>
+    </section>
+
+    <!-- Improvements -->
+    <section class="dash-section">
+      <div class="section-row">
+        <h2 class="section-heading">How You Can Improve Your Match</h2>
+      </div>
+      <div class="jm-improve-list">
+        <div class="jm-improve-item" *ngFor="let item of match.improvements; let i = index">
+          <span class="jm-improve-num">{{ numLabel(i) }}</span>
+          <p class="jm-improve-text">{{ item }}</p>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+</div>
