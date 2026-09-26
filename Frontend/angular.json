@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "resume-iq-ui": {
+    "resumeiq-swe": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/resume-iq-ui",
+            "outputPath": "dist/resumeiq-swe",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
@@ -59,10 +59,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "resume-iq-ui:build:production"
+              "buildTarget": "resumeiq-swe:build:production"
             },
             "development": {
-              "buildTarget": "resume-iq-ui:build:development"
+              "buildTarget": "resumeiq-swe:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,5 +83,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
