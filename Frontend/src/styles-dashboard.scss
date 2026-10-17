@@ -2,7 +2,10 @@
    Uses the same design tokens as the homepage (styles.scss :root). */
 
 .dash-page {
-  animation: pageEnter 0.4s ease both;
+  /* NO animation-fill-mode here: 'both'/'forwards' keeps Chrome treating this
+     element as a containing block for position:fixed descendants forever,
+     which breaks every modal dialog rendered inside the page. */
+  animation: pageEnter 0.4s ease;
 }
 
 @keyframes pageEnter {

@@ -20,8 +20,6 @@ export interface PlanConfig {
   priceLabel: string;
   tagline: string;
   monthlyLimits: Record<UsageKind, number>;
-  resumeImprovement: 'limited' | 'full';
-  skillGapAnalysis: 'basic' | 'full';
   advancedFeatures: boolean;
   careerAgent: 'none' | 'comingSoon';
 }
@@ -44,8 +42,6 @@ export const PLANS: Record<PlanId, PlanConfig> = {
       resumeQuestions: 20,
       interviewSessions: 1,
     },
-    resumeImprovement: 'limited',
-    skillGapAnalysis: 'basic',
     advancedFeatures: false,
     careerAgent: 'none',
   },
@@ -63,8 +59,6 @@ export const PLANS: Record<PlanId, PlanConfig> = {
       resumeQuestions: 300,
       interviewSessions: 10,
     },
-    resumeImprovement: 'full',
-    skillGapAnalysis: 'full',
     advancedFeatures: true,
     careerAgent: 'comingSoon',
   },
@@ -101,8 +95,6 @@ export const FEATURE_LABELS: Record<FeatureId, string> = {
   [FEATURE_IDS.JOB_MATCH]: 'Job Match',
   [FEATURE_IDS.RESUME_QA]: 'Resume Q&A',
   [FEATURE_IDS.INTERVIEW_PREP]: 'Interview Preparation',
-  [FEATURE_IDS.RESUME_IMPROVEMENT]: 'Resume Improvement',
-  [FEATURE_IDS.SKILL_GAP_ANALYSIS]: 'Skill Gap Analysis',
   [FEATURE_IDS.CAREER_AGENT]: 'AI Career Assistant',
 };
 
@@ -120,8 +112,6 @@ export const PLAN_COMPARISON: PlanComparisonRow[] = [
   { label: 'Job matches', free: '3 / month', premium: '30 / month' },
   { label: 'Resume Q&A', free: '20 / month', premium: '300 / month' },
   { label: 'Interview sessions', free: '1 / month', premium: '10 / month' },
-  { label: 'Resume improvement', free: 'Limited', premium: 'Full' },
-  { label: 'Skill gap analysis', free: 'Basic', premium: 'Full' },
   { label: 'Advanced features', free: '—', premium: 'Included', premiumBadge: 'included' },
   { label: 'AI Career Assistant', free: '—', premium: 'Coming Soon', premiumBadge: 'comingSoon' },
 ];

@@ -45,26 +45,52 @@
             class="btn-icon"
             (click)="toggleNotifications()"
             aria-label="Notifications"
-            [attr.aria-expanded]="notifOpen"
+            [attr.aria-expanded]="notifOpen()"
           >
             <app-icon name="bell" [size]="18" />
-            <span class="notif-dot" aria-hidden="true"></span>
+            <span class="notif-dot" [class.pulse]="uploads().length > 0" aria-hidden="true"></span>
           </button>
-          <div class="dropdown-menu notif-menu" *ngIf="notifOpen">
+          <div class="dropdown-menu notif-menu" *ngIf="notifOpen()">
             <div class="dropdown-label">Notifications</div>
+
+            <!-- Live upload progress -->
+            <div class="notif-upload" *ngFor="let up of uploads(); trackBy: trackByUploadId">
+              <span class="notif-upload-icon" aria-hidden="true">
+                <app-icon name="upload" [size]="15" />
+              </span>
+              <span class="notif-upload-body">
+                <span class="notif-upload-name" [title]="up.fileName">
+                  {{ up.fileName }}
+                  <span class="notif-upload-size">{{ up.sizeLabel }}</span>
+                </span>
+                <span class="notif-upload-bar" aria-hidden="true">
+                  <span
+                    class="notif-upload-fill"
+                    [class.done]="up.progress >= 100"
+                    [style.width.%]="up.progress"
+                  ></span>
+                </span>
+              </span>
+              <span
+                class="notif-upload-pct"
+                [class.done]="up.progress >= 100"
+                >{{ up.progress }}%</span
+              >
+            </div>
+
             <button
               type="button"
-              class="dropdown-item"
-              *ngFor="let n of notifications"
+              class="dropdown-item notif-item"
+              *ngFor="let n of notifications(); trackBy: trackByNotif"
               (click)="closeDropdowns()"
             >
-              <span class="dropdown-item-icon" aria-hidden="true">
-                <app-icon [name]="n.icon" [size]="16" />
-              </span>
-              <span class="dropdown-item-text">
+              <span class="notif-main">
+                <span class="dropdown-item-icon" aria-hidden="true">
+                  <app-icon [name]="n.icon" [size]="16" />
+                </span>
                 <span class="dropdown-item-title">{{ n.text }}</span>
-                <span class="dropdown-item-time">{{ n.time }}</span>
               </span>
+              <span class="dropdown-item-time">{{ n.time }}</span>
             </button>
           </div>
         </div>
@@ -112,7 +138,7 @@
       </div>
     </div>
 
-    <div class="dropdown-backdrop" *ngIf="profileOpen || notifOpen" (click)="closeDropdowns()"></div>
+    <div class="dropdown-backdrop" *ngIf="profileOpen || notifOpen()" (click)="closeDropdowns()"></div>
   </header>
 
   <!-- Body: sidebar + content -->

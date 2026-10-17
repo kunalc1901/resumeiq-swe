@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
 import { SubscriptionService } from '../../../core/services/subscription.service';
+import { NotificationService } from '../../../core/services/notifications.service';
 import { FEATURE_IDS } from '../../../core/constants/feature-ids';
 import { ResumeAnalysis } from '../../../core/models/dashboard.model';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
@@ -11,6 +12,7 @@ import { ScoreRingComponent } from '../../../shared/score-ring/score-ring.compon
 import { ProgressBarComponent } from '../../../shared/progress-bar/progress-bar.component';
 import { CollapsibleSectionComponent } from '../../../shared/collapsible-section/collapsible-section.component';
 import { UpgradeModalComponent } from '../../../shared/upgrade-modal/upgrade-modal.component';
+import { ResumeUploadModalComponent } from '../../../shared/resume-upload-modal/resume-upload-modal.component';
 import { TruncateTitleDirective } from '../../../shared/truncate-title/truncate-title.directive';
 
 interface ResumeCard {
@@ -47,6 +49,7 @@ const MOCK_DATES = ['2 days ago', '2 weeks ago', 'Yesterday'];
     ProgressBarComponent,
     CollapsibleSectionComponent,
     UpgradeModalComponent,
+    ResumeUploadModalComponent,
     TruncateTitleDirective,
   ],
   selector: 'app-resume-analysis',
@@ -61,6 +64,7 @@ export class ResumeAnalysisComponent implements OnInit {
 
   slotModalOpen = false;
   analysisModalOpen = false;
+  uploadModalOpen = false;
 
   get overallBreakdown(): BreakdownRow[] {
     const b = this.analysis?.scoreBreakdown;
@@ -91,6 +95,7 @@ export class ResumeAnalysisComponent implements OnInit {
   constructor(
     private dashboardService: DashboardService,
     public subscription: SubscriptionService,
+    private notificationsService: NotificationService,
     private router: Router,
   ) {}
 
@@ -126,23 +131,22 @@ export class ResumeAnalysisComponent implements OnInit {
     return selected?.fileName || 'Resume';
   }
 
-  /** Upload flow. Consumes a resume slot (mock) or shows the upgrade modal. */
+  /** Opens the resume upload dialog. Slot check happens before the dialog. */
   onUpload(): void {
     if (!this.hasSlotsRemaining) {
       this.slotModalOpen = true;
       return;
     }
-    const idx = this.resumes.length;
-    this.resumes.push({
-      id: `resume-${Date.now()}`,
-      fileName: `My_Resume_${idx + 1}.pdf`,
-      uploadedAt: 'Just now',
-      overallScore: null,
-      atsScore: null,
-      analyzed: false,
-      selected: false,
-    });
-    this.subscription.consume('resumeSlots');
+    this.uploadModalOpen = true;
+  }
+
+  /**
+   * Dialog confirmed: close it and start the (mock) upload in the
+   * notification panel.
+   */
+  onResumeUpload(file: { name: string; size: number }): void {
+    this.uploadModalOpen = false;
+    this.notificationsService.startUpload(file.name, file.size);
   }
 
   /** Selecting a resume never consumes AI usage. */

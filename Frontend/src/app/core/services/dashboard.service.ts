@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import {
   ActivityGroup,
-  ImprovementData,
   Insight,
   InterviewEvaluation,
   InterviewQuestion,
@@ -10,13 +9,11 @@ import {
   ProfileData,
   ResumeAnalysis,
   ResumeStatus,
-  SkillGapData,
   Stat,
 } from '../models/dashboard.model';
 import {
   MOCK_ACTIVITY,
   MOCK_ANALYSIS,
-  MOCK_IMPROVEMENT,
   MOCK_INSIGHTS,
   MOCK_INTERVIEW_EVALUATION,
   MOCK_INTERVIEW_QUESTIONS,
@@ -25,7 +22,6 @@ import {
   MOCK_QA_ANSWER,
   MOCK_QA_SOURCE,
   MOCK_RESUME_STATUS,
-  MOCK_SKILL_GAPS,
   MOCK_STATS,
   MOCK_SUGGESTED_QUESTIONS,
 } from '../mocks/dashboard.mock';
@@ -78,15 +74,7 @@ export class DashboardService {
     return of(MOCK_INTERVIEW_EVALUATION);
   }
 
-  getSkillGaps(): Observable<SkillGapData> {
-    return of(MOCK_SKILL_GAPS);
-  }
-
   getProfile(): Observable<ProfileData> {
     return of(MOCK_PROFILE);
-  }
-
-  getImprovementData(): Observable<ImprovementData> {
-    return of(MOCK_IMPROVEMENT);
   }
 }

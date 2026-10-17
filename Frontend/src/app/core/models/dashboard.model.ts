@@ -107,18 +107,6 @@ export interface JobMatchResult {
   recommendations: string[];
 }
 
-export interface SkillGap {
-  skill: string;
-  level: number;
-  note: string;
-}
-
-export interface SkillGapData {
-  yourSkills: string[];
-  targetSkills: string[];
-  gaps: SkillGap[];
-}
-
 export interface ProfileData {
   firstName: string;
   lastName: string;
@@ -145,16 +133,4 @@ export interface InterviewEvaluation {
   weaknesses: string[];
   suggestedAnswer: string;
   followUp: string;
-}
-
-export interface ImprovementPair {
-  current: string;
-  suggested: string;
-}
-
-export interface ImprovementData {
-  summary: ImprovementPair;
-  experience: ImprovementPair[];
-  projects: ImprovementPair[];
-  skills: ImprovementPair;
 }

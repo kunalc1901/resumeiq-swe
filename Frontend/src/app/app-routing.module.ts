@@ -68,20 +68,6 @@ const appRoutes: Routes = [
           ),
       },
       {
-        path: 'improve',
-        loadComponent: () =>
-          import('./pages/dashboard/improve/resume-improve.component').then(
-            (m) => m.ResumeImproveComponent,
-          ),
-      },
-      {
-        path: 'skill-gaps',
-        loadComponent: () =>
-          import('./pages/dashboard/skill-gaps/skill-gaps.component').then(
-            (m) => m.SkillGapsComponent,
-          ),
-      },
-      {
         path: 'profile',
         loadComponent: () =>
           import('./pages/dashboard/profile/profile.component').then(

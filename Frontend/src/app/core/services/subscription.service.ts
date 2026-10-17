@@ -189,14 +189,9 @@ export class SubscriptionService {
     return this.accessOf(feature) !== 'none';
   }
 
-  /** Depth of access for non-metered features (improvement, skill gaps...). */
+  /** Depth of access for non-metered features. */
   accessOf(feature: FeatureId): AccessLevel {
-    const plan = this.getPlan();
     switch (feature) {
-      case FEATURE_IDS.RESUME_IMPROVEMENT:
-        return plan.resumeImprovement;
-      case FEATURE_IDS.SKILL_GAP_ANALYSIS:
-        return plan.skillGapAnalysis;
       case FEATURE_IDS.CAREER_AGENT:
         return 'none'; // not implemented yet
       default:

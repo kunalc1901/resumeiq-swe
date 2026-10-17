@@ -375,4 +375,11 @@
     (dismiss)="analysisModalOpen = false"
     (upgrade)="goUpgrade()"
   />
+
+  <!-- Resume upload dialog (UI only for now) -->
+  <app-resume-upload-modal
+    [open]="uploadModalOpen"
+    (dismiss)="uploadModalOpen = false"
+    (upload)="onResumeUpload($event)"
+  />
 </div>

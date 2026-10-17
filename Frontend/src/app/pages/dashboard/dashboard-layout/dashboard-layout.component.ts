@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { SubscriptionStatusComponent } from '../../../shared/subscription-status/subscription-status.component';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
-import { AuthService, SubscriptionService } from '../../../core/services';
+import { AuthService, SubscriptionService, NotificationService, UploadTask } from '../../../core/services';
 
 interface NavItem {
   label: string;
@@ -26,6 +26,17 @@ interface NavGroup {
 })
 export class DashboardLayoutComponent implements OnInit {
   showLoader = true;
+  /** Signals keep the UI reactive under Angular's (default) zoneless CD. */
+  uploads = signal<UploadTask[]>([]);
+  notifications = signal<{ icon: string; text: string; time: string }[]>([
+    { icon: 'file-text', text: 'Resume analysis complete', time: '2m ago' },
+    { icon: 'target', text: 'New job match is ready', time: '1h ago' },
+    { icon: 'sparkles', text: 'New improvement suggestions', time: 'Yesterday' },
+  ]);
+
+  trackByUploadId = (_: number, item: UploadTask) => item.id;
+  trackByNotif = (_: number, item: { icon: string; text: string; time: string }) =>
+    item.text + item.time;
   navGroups: NavGroup[] = [
     {
       label: 'Main',
@@ -38,28 +49,15 @@ export class DashboardLayoutComponent implements OnInit {
       ],
     },
     {
-      label: 'Improve',
-      items: [
-        { label: 'Resume Improvement', route: '/dashboard/improve', icon: 'sparkles' },
-        { label: 'Skill Gaps', route: '/dashboard/skill-gaps', icon: 'trending-up' },
-      ],
-    },
-    {
       label: 'Account',
       items: [{ label: 'Usage & Plan', route: '/dashboard/usage', icon: 'activity' }],
     },
   ];
 
-  notifications = [
-    { icon: 'file-text', text: 'Resume analysis complete', time: '2m ago' },
-    { icon: 'target', text: 'New job match is ready', time: '1h ago' },
-    { icon: 'sparkles', text: 'New improvement suggestions', time: 'Yesterday' },
-  ];
-
   collapsed = false;
   mobileOpen = false;
   profileOpen = false;
-  notifOpen = false;
+  notifOpen = signal(false);
 
   private user: any = null;
   private firstName = 'John';
@@ -69,6 +67,7 @@ export class DashboardLayoutComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private subscriptionService: SubscriptionService,
+    private notificationsService: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -77,6 +76,28 @@ export class DashboardLayoutComponent implements OnInit {
     this.firstName = this.user?.first_name || 'John';
     this.lastName = this.user?.last_name || 'Doe';
     this.email = this.user?.email || 'john.doe@resumeiq.dev';
+
+    // Live upload tasks: auto-open the panel when a new upload starts so the
+    // progress is visible. Manual close is respected until the batch finishes.
+    let hadTasks = false;
+    this.notificationsService.uploads$.subscribe((tasks) => {
+      this.uploads.set(tasks);
+      if (!hadTasks && tasks.length > 0) {
+        hadTasks = true;
+        this.notifOpen.set(true);
+      }
+      if (tasks.length === 0) {
+        hadTasks = false;
+      }
+    });
+
+    // Finished uploads become regular notifications.
+    this.notificationsService.completed$.subscribe(({ fileName }) => {
+      this.notifications.set([
+        { icon: 'file-text', text: `${fileName} uploaded`, time: 'Just now' },
+        ...this.notifications(),
+      ].slice(0, 5));
+    });
   }
 
   onLoaderComplete(): void {
@@ -107,17 +128,17 @@ export class DashboardLayoutComponent implements OnInit {
 
   toggleProfile(): void {
     this.profileOpen = !this.profileOpen;
-    this.notifOpen = false;
+    this.notifOpen.set(false);
   }
 
   toggleNotifications(): void {
-    this.notifOpen = !this.notifOpen;
+    this.notifOpen.set(!this.notifOpen());
     this.profileOpen = false;
   }
 
   closeDropdowns(): void {
     this.profileOpen = false;
-    this.notifOpen = false;
+    this.notifOpen.set(false);
   }
 
   logout(): void {

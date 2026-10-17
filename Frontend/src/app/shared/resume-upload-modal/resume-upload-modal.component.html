@@ -1,0 +1,140 @@
+<div class="upload-backdrop" [class.flying]="flying" *ngIf="open" (click)="onDismiss()">
+  <div
+    class="upload-card"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Upload Resume"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      type="button"
+      class="modal-close"
+      (click)="onDismiss()"
+      aria-label="Close dialog"
+    >
+      <app-icon name="x" [size]="18" />
+    </button>
+
+    <div class="modal-head">
+      <div class="modal-icon" aria-hidden="true">
+        <app-icon name="upload" [size]="26" />
+      </div>
+      <h3 class="modal-title">Upload Resume</h3>
+      <p class="modal-message">
+        Drag and drop your resume into the area below, or browse to pick it
+        from your computer.
+      </p>
+    </div>
+
+    <div
+      #dropzone
+      class="upload-zone"
+      [class.dragging]="dragging"
+      [class.selected]="!!selectedFile"
+      (dragenter)="onDragEnter($event)"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      (click)="openPicker()"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="
+        selectedFile
+          ? 'Selected file ' + selectedFile.name + '. Click to choose a different file'
+          : 'Drop your PDF resume here, or press Enter to browse files'
+      "
+      (keydown.enter)="openPicker()"
+      (keydown.space)="openPicker(); $event.preventDefault()"
+    >
+      <!-- Selected file state -->
+      <ng-container *ngIf="selectedFile; else emptyZone">
+        <button
+          type="button"
+          class="zone-remove"
+          (click)="clearFile(); $event.stopPropagation()"
+          aria-label="Remove selected file"
+        >
+          <app-icon name="x" [size]="15" />
+        </button>
+        <div class="zone-file-icon" aria-hidden="true">
+          <app-icon name="file-text" [size]="26" />
+          <span class="zone-file-check">
+            <app-icon name="check" [size]="11" />
+          </span>
+        </div>
+        <div class="zone-file-name" [title]="selectedFile.name">
+          {{ selectedFile.name }}
+        </div>
+        <div class="zone-file-meta">
+          PDF · {{ formatSize(selectedFile.size) }} · Ready to upload
+        </div>
+      </ng-container>
+
+      <!-- Empty state -->
+      <ng-template #emptyZone>
+        <div class="upload-zone-icon" aria-hidden="true">
+          <app-icon name="upload" [size]="30" />
+        </div>
+        <div class="upload-zone-title">Drag &amp; drop your resume here</div>
+        <div class="upload-zone-or">or</div>
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          (click)="openPicker(); $event.stopPropagation()"
+        >
+          <app-icon name="folder" [size]="15" />
+          Browse Files
+        </button>
+      </ng-template>
+
+      <div class="upload-zone-hint" [class.visible]="dragging">
+        Release to add your file
+      </div>
+    </div>
+
+    <div class="upload-format-note">
+      <span class="format-note-icon" aria-hidden="true">
+        <app-icon name="file-text" [size]="14" />
+      </span>
+      Only PDF file formats are supported.
+    </div>
+
+    <div class="upload-tip-card" role="note">
+      <span class="tip-card-icon" aria-hidden="true">
+        <app-icon name="lightbulb" [size]="16" />
+      </span>
+      <div class="tip-card-body">
+        <div class="tip-card-title">ResumeIQ Tip</div>
+        <p class="tip-card-text">
+          Resumes longer than 3 pages are often filtered out — keep yours
+          under 3 pages.
+        </p>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" (click)="onDismiss()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="!selectedFile"
+        (click)="onUploadConfirm()"
+      >
+        <app-icon name="upload" [size]="15" />
+        Upload Resume
+      </button>
+    </div>
+
+    <input
+      #fileInput
+      type="file"
+      accept=".pdf,application/pdf"
+      class="upload-input"
+      tabindex="-1"
+      aria-hidden="true"
+      (change)="onFilePicked($event)"
+    />
+  </div>
+</div>

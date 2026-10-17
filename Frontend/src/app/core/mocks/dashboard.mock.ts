@@ -1,6 +1,5 @@
 import {
   ActivityGroup,
-  ImprovementData,
   Insight,
   InterviewEvaluation,
   InterviewQuestion,
@@ -8,7 +7,6 @@ import {
   ProfileData,
   ResumeAnalysis,
   ResumeStatus,
-  SkillGapData,
   Stat,
 } from '../models/dashboard.model';
 
@@ -260,17 +258,6 @@ export const MOCK_QA_ANSWER =
 
 export const MOCK_QA_SOURCE = 'Resume → Projects → Page 2';
 
-export const MOCK_SKILL_GAPS: SkillGapData = {
-  yourSkills: ['Node.js', 'MongoDB', 'Angular', 'Python', 'REST APIs'],
-  targetSkills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD'],
-  gaps: [
-    { skill: 'AWS', level: 15, note: 'Mentioned as a tool, no hands-on bullet found.' },
-    { skill: 'Docker', level: 20, note: 'Basic usage noted in a project.' },
-    { skill: 'CI/CD', level: 10, note: 'Not mentioned in the current resume.' },
-    { skill: 'Kubernetes', level: 5, note: 'Not mentioned in the current resume.' },
-  ],
-};
-
 export const MOCK_PROFILE: ProfileData = {
   firstName: 'John',
   lastName: 'Doe',
@@ -322,37 +309,4 @@ export const MOCK_INTERVIEW_EVALUATION: InterviewEvaluation = {
     'I would start by outlining the auth flow: registration, login issuing a JWT, middleware verifying the token on protected routes, role-based checks for authorization, and token refresh for long sessions.',
   followUp:
     'How would you secure an API that also needs to support third-party integrations?',
-};
-
-export const MOCK_IMPROVEMENT: ImprovementData = {
-  summary: {
-    current:
-      'Software Engineer with experience building web applications using JavaScript, Node.js and MongoDB.',
-    suggested:
-      'Software Engineer experienced in building scalable web applications with Node.js, Express and MongoDB, focused on backend APIs and developer-facing products.',
-  },
-  experience: [
-    {
-      current: 'Worked on backend APIs using Node.js.',
-      suggested:
-        'Developed RESTful APIs using Node.js and Express, implementing scalable backend services for client-facing products.',
-    },
-    {
-      current: 'Used MongoDB for data storage.',
-      suggested:
-        'Built and maintained MongoDB data models supporting real-time features across products.',
-    },
-  ],
-  projects: [
-    {
-      current: 'Built a task management API.',
-      suggested:
-        'Designed a REST API for team task management with role-based access and real-time updates using Node.js, Express and MongoDB.',
-    },
-  ],
-  skills: {
-    current: 'Node.js, Express, MongoDB, React, JavaScript',
-    suggested:
-      'Backend: Node.js, Express, MongoDB, REST APIs · Frontend: React, TypeScript · Tools: Git, Postman',
-  },
 };

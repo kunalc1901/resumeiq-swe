@@ -3,7 +3,7 @@
 .qa-page {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - 122px);
+  min-height: calc(100vh - 150px);
   margin-bottom: -24px;
 }
 
@@ -265,7 +265,6 @@
 
 @media (max-width: 560px) {
   .qa-page {
-    min-height: calc(100vh - 102px);
     margin-bottom: -20px;
   }
 

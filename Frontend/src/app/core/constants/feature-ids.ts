@@ -9,8 +9,6 @@ export const FEATURE_IDS = {
   JOB_MATCH: 'jobMatch',
   RESUME_QA: 'resumeQA',
   INTERVIEW_PREP: 'interview',
-  RESUME_IMPROVEMENT: 'resumeImprovement',
-  SKILL_GAP_ANALYSIS: 'skillGapAnalysis',
   CAREER_AGENT: 'careerAgent',
 } as const;
 

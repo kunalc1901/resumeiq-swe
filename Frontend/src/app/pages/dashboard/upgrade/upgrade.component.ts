@@ -60,8 +60,6 @@ export class UpgradeComponent {
       `${l.jobMatches} Job Matches / month`,
       `${l.resumeQuestions} Resume Q&A questions / month`,
       `${l.interviewSessions} Interview session / month`,
-      'Limited resume improvement',
-      'Basic skill gap analysis',
     ];
   }
 
@@ -73,8 +71,6 @@ export class UpgradeComponent {
       `${l.jobMatches} Job Matches / month`,
       `${l.resumeQuestions} Resume Q&A questions / month`,
       `${l.interviewSessions} Interview sessions / month`,
-      'Full resume improvement',
-      'Advanced skill gap analysis',
       'Advanced features included',
       'AI Career Assistant — Coming Soon',
     ];
