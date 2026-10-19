@@ -11,11 +11,11 @@ import {
 } from '@angular/core';
 import { AppIconComponent } from '../app-icon/app-icon.component';
 
+const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024;
+
 /**
- * Resume upload dialog (UI-only for now).
- *
- * Visual states are wired for demonstration (drag highlight, browse picker),
- * but no file handling, upload or save logic is implemented yet.
+ * Resume upload dialog. Validates the picked/dropped file and hands the File
+ * to the parent, which performs the S3 upload.
  */
 @Component({
   changeDetection: ChangeDetectionStrategy.Default,
@@ -41,7 +41,7 @@ export class ResumeUploadModalComponent implements OnDestroy {
   @Output() dismiss = new EventEmitter<void>();
 
   /** Emitted after the confirm animation, when the dialog "flies into" the bell. */
-  @Output() upload = new EventEmitter<{ name: string; size: number }>();
+  @Output() upload = new EventEmitter<File>();
 
   @ViewChild('fileInput') private fileInput!: ElementRef<HTMLInputElement>;
   @ViewChild('dropzone') private dropzone!: ElementRef<HTMLElement>;
@@ -54,8 +54,11 @@ export class ResumeUploadModalComponent implements OnDestroy {
 
   private flyTimer: ReturnType<typeof setTimeout> | null = null;
 
-  /** File shown in the dialog once the user browses or drops one (UI state). */
-  selectedFile: { name: string; size: number } | null = null;
+  /** File selected by the user, or null when nothing is chosen. */
+  selectedFile: File | null = null;
+
+  /** User-facing validation message (technical details never go here). */
+  uploadError = '';
 
   onUploadConfirm(): void {
     const file = this.selectedFile;
@@ -69,7 +72,7 @@ export class ResumeUploadModalComponent implements OnDestroy {
       this.flyTimer = null;
       this.flying = false;
       this.selectedFile = null;
-      this.upload.emit({ name: file.name, size: file.size });
+      this.upload.emit(file);
     }, 440);
   }
 
@@ -81,6 +84,7 @@ export class ResumeUploadModalComponent implements OnDestroy {
     this.flying = false;
     this.dragging = false;
     this.selectedFile = null;
+    this.uploadError = '';
     this.dismiss.emit();
   }
 
@@ -126,6 +130,7 @@ export class ResumeUploadModalComponent implements OnDestroy {
 
   clearFile(): void {
     this.selectedFile = null;
+    this.uploadError = '';
   }
 
   formatSize(bytes: number): string {
@@ -140,7 +145,20 @@ export class ResumeUploadModalComponent implements OnDestroy {
   }
 
   private setSelectedFile(file: File): void {
-    this.selectedFile = { name: file.name, size: file.size };
+    const isPdf =
+      file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+    if (!isPdf) {
+      this.selectedFile = null;
+      this.uploadError = 'Only PDF files are supported.';
+      return;
+    }
+    if (file.size > MAX_FILE_SIZE_BYTES) {
+      this.selectedFile = null;
+      this.uploadError = 'This file is too large. The maximum size is 10 MB.';
+      return;
+    }
+    this.uploadError = '';
+    this.selectedFile = file;
   }
 
   @HostListener('document:keydown.escape')

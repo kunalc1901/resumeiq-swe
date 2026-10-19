@@ -9,6 +9,13 @@
     "userPoolId": "",
     "userPoolClientId": ""
   },
+  "aws": {
+    "region": "",
+    "bucket": "",
+    "accessKeyId": "",
+    "secretAccessKey": "",
+    "presignExpiresSeconds": 300
+  },
   "logging": {
     "level": "info"
   }

@@ -62,6 +62,8 @@ export interface ResumeRecord {
   processed_at?: string | null;
   file_name: string;
   user_id: string;
+  /** S3 object key for the uploaded file. */
+  s3_key?: string;
   /** Null or absent while the resume has not been analysed yet. */
   analysis?: ResumeAnalysisPayload | null;
 }

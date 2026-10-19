@@ -111,6 +111,45 @@ const config = convict({
       env: 'SQ_COGNITO_CLIENT_ID',
     },
   },
+  aws: {
+    region: {
+      doc: 'AWS region that hosts the resume bucket.',
+      format: String,
+      default: '',
+      arg: 'aws-region',
+      env: 'SQ_AWS_REGION',
+    },
+    bucket: {
+      doc: 'S3 bucket used for resume uploads.',
+      format: String,
+      default: '',
+      arg: 'aws-bucket',
+      env: 'SQ_AWS_BUCKET',
+    },
+    accessKeyId: {
+      doc: 'AWS access key id. Leave empty to use the default AWS credential chain.',
+      format: String,
+      default: '',
+      sensitive: true,
+      arg: 'aws-access-key-id',
+      env: 'SQ_AWS_ACCESS_KEY_ID',
+    },
+    secretAccessKey: {
+      doc: 'AWS secret access key. Leave empty to use the default AWS credential chain.',
+      format: String,
+      default: '',
+      sensitive: true,
+      arg: 'aws-secret-access-key',
+      env: 'SQ_AWS_SECRET_ACCESS_KEY',
+    },
+    presignExpiresSeconds: {
+      doc: 'Lifetime of generated upload URLs, in seconds.',
+      format: 'int',
+      default: 300,
+      arg: 'aws-presign-expires',
+      env: 'SQ_AWS_PRESIGN_EXPIRES',
+    },
+  },
   logging: {
     level: {
       doc: 'The output log level',

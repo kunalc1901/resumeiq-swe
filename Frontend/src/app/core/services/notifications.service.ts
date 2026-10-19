@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
-/** Progress bar and filename for a UI-only (mock) upload. */
+/** Progress bar and filename for an in-flight upload. */
 export interface UploadTask {
   id: string;
   fileName: string;
@@ -17,7 +17,12 @@ export interface UploadCompleted {
   fileName: string;
 }
 
-const TICK_MS = 90;
+/** Emitted when an upload fails so the panel can show a notification. */
+export interface UploadFailed {
+  id: string;
+  fileName: string;
+}
+
 const FINALIZE_MS = 420;
 
 function formatFileSize(bytes: number): string {
@@ -32,10 +37,9 @@ function formatFileSize(bytes: number): string {
 }
 
 /**
- * Mock upload progress for the notification panel.
- *
- * UI-only: simulates the upload lifecycle (0 → 100%, then finalize) so the
- * notification panel can be built before real upload APIs exist.
+ * Tracks real upload progress for the notification panel. Callers create a
+ * task with startUpload(), push S3 upload progress with updateUpload(), then
+ * finish with completeUpload() or failUpload().
  */
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
@@ -47,8 +51,19 @@ export class NotificationService {
   /** Fires when an upload finishes (task removed from uploads$). */
   completed$ = this.completedSubject.asObservable();
 
-  startUpload(fileName: string, sizeBytes: number): void {
-    const id = `upload-${Date.now()}`;
+  private failedSubject = new Subject<UploadFailed>();
+  /** Fires when an upload fails (task removed from uploads$). */
+  failed$ = this.failedSubject.asObservable();
+
+  /** Prevents duplicate completion/failure handling for the same task. */
+  private finalizing = new Set<string>();
+
+  /**
+   * Registers a new upload task at 0%.
+   * @returns The task id used by updateUpload/completeUpload/failUpload
+   */
+  startUpload(fileName: string, sizeBytes: number): string {
+    const id = `upload-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     const task: UploadTask = {
       id,
       fileName,
@@ -56,30 +71,55 @@ export class NotificationService {
       progress: 0,
     };
     this.uploadsSubject.next([...this.uploadsSubject.value, task]);
+    return id;
+  }
 
-    const interval = setInterval(() => {
-      const tasks = this.uploadsSubject.value;
-      const current = tasks.find((t) => t.id === id);
-      if (!current) {
-        clearInterval(interval);
-        return;
-      }
-      const next = Math.min(100, current.progress + 2 + Math.round(Math.random() * 7));
-      if (next >= 100) {
-        clearInterval(interval);
-        // Bar full: short "finalizing" pause, then remove + notify.
-        this.uploadsSubject.next(
-          tasks.map((t) => (t.id === id ? { ...t, progress: 100 } : t)),
-        );
-        setTimeout(() => {
-          this.uploadsSubject.next(this.uploadsSubject.value.filter((t) => t.id !== id));
-          this.completedSubject.next({ id, fileName });
-        }, FINALIZE_MS);
-      } else {
-        this.uploadsSubject.next(
-          tasks.map((t) => (t.id === id ? { ...t, progress: next } : t)),
-        );
-      }
-    }, TICK_MS);
+  /** Updates an upload's progress, clamped to 0-100. */
+  updateUpload(id: string, progress: number): void {
+    const next = Math.max(0, Math.min(100, Math.round(progress)));
+    this.uploadsSubject.next(
+      this.uploadsSubject.value.map((task) =>
+        task.id === id ? { ...task, progress: next } : task,
+      ),
+    );
+  }
+
+  /** Marks an upload complete, then removes it and emits completed$. */
+  completeUpload(id: string): void {
+    if (this.finalizing.has(id)) {
+      return;
+    }
+    const task = this.uploadsSubject.value.find((item) => item.id === id);
+    if (!task) {
+      return;
+    }
+
+    this.finalizing.add(id);
+    this.updateUpload(id, 100);
+    setTimeout(() => {
+      this.finalizing.delete(id);
+      this.uploadsSubject.next(
+        this.uploadsSubject.value.filter((item) => item.id !== id),
+      );
+      this.completedSubject.next({ id, fileName: task.fileName });
+    }, FINALIZE_MS);
+  }
+
+  /** Removes a failed upload and emits failed$. */
+  failUpload(id: string): void {
+    if (this.finalizing.has(id)) {
+      return;
+    }
+    const task = this.uploadsSubject.value.find((item) => item.id === id);
+    if (!task) {
+      return;
+    }
+
+    this.finalizing.add(id);
+    this.uploadsSubject.next(
+      this.uploadsSubject.value.filter((item) => item.id !== id),
+    );
+    this.finalizing.delete(id);
+    this.failedSubject.next({ id, fileName: task.fileName });
   }
 }

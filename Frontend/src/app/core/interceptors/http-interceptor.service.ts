@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { from, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../services';
 
 @Injectable()
@@ -25,16 +26,20 @@ export class HttpInterceptorService implements HttpInterceptor {
    */
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     const token = this.authService.getToken();
+    // Only attach the Cognito token to our own API. Third-party requests
+    // (e.g. the presigned S3 upload URL) must be left untouched, otherwise
+    // the extra Authorization header invalidates the S3 signature.
+    const isApiRequest = req.url.startsWith(environment.api_url);
     let requestClone = req;
 
-    if (token) {
+    if (token && isApiRequest) {
       requestClone = this.attachAuthHeaders(req, token);
     }
 
     return next.handle(requestClone).pipe(
       catchError((error: any) => {
         console.error(`Error occurred while intercepting the request, err:`, error);
-        if (error instanceof HttpErrorResponse && error.status == 401) {
+        if (isApiRequest && error instanceof HttpErrorResponse && error.status == 401) {
           this.authService.logout();
         }
         return throwError(() => error);

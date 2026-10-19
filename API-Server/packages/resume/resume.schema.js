@@ -61,6 +61,7 @@ const ResumeSchema = new mongoose.Schema(
     processed_at: { type: Date },
     file_name: { type: String, required: true },
     user_id: { type: String, required: true },
+    s3_key: { type: String, unique: true, sparse: true, index: true },
     analysis: { type: AnalysisSchema, default: null },
   },
   {

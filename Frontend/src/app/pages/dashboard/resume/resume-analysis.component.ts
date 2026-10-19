@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import { HttpEventType } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -130,12 +131,47 @@ export class ResumeAnalysisComponent implements OnInit {
   }
 
   /**
-   * Dialog confirmed: close it and start the (mock) upload in the
-   * notification panel.
+   * Dialog confirmed: request a presigned URL, upload the file straight to S3
+   * (tracking progress in the notification panel), then save the entry.
    */
-  onResumeUpload(file: { name: string; size: number }): void {
+  onResumeUpload(file: File): void {
     this.uploadModalOpen = false;
-    this.notificationsService.startUpload(file.name, file.size);
+    const taskId = this.notificationsService.startUpload(file.name, file.size);
+
+    this.resumeService.getUploadUrl(file).subscribe({
+      next: ({ upload_url, key, file_name }) => {
+        this.resumeService.uploadToS3(upload_url, file).subscribe({
+          next: (event) => {
+            if (event.type === HttpEventType.UploadProgress && event.total) {
+              const percent = Math.round((event.loaded / event.total) * 100);
+              // Hold at 99% until the DB entry is saved.
+              this.notificationsService.updateUpload(taskId, Math.min(percent, 99));
+            }
+          },
+          error: (err) => {
+            console.error(`Error occurred while uploading resume to S3, err:`, err);
+            this.notificationsService.failUpload(taskId);
+          },
+          complete: () => {
+            this.resumeService.createResume(key, file_name).subscribe({
+              next: () => {
+                this.notificationsService.completeUpload(taskId);
+                this.subscription.consume('resumeSlots');
+                this.loadResumes();
+              },
+              error: (err) => {
+                console.error(`Error occurred while saving the resume, err:`, err);
+                this.notificationsService.failUpload(taskId);
+              },
+            });
+          },
+        });
+      },
+      error: (err) => {
+        console.error(`Error occurred while requesting a resume upload URL, err:`, err);
+        this.notificationsService.failUpload(taskId);
+      },
+    });
   }
 
   /** Selecting a resume never consumes AI usage. */

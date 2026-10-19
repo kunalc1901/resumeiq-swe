@@ -98,6 +98,18 @@ export class DashboardLayoutComponent implements OnInit {
         ...this.notifications(),
       ].slice(0, 5));
     });
+
+    // Failed uploads get a generic notification (details stay in the console).
+    this.notificationsService.failed$.subscribe(({ fileName }) => {
+      this.notifications.set([
+        {
+          icon: 'alert-circle',
+          text: `Could not upload ${fileName}`,
+          time: 'Just now',
+        },
+        ...this.notifications(),
+      ].slice(0, 5));
+    });
   }
 
   onLoaderComplete(): void {

@@ -275,6 +275,19 @@
   transform: none;
 }
 
+/* Validation message (wrong type / too large) */
+.upload-error {
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 1px solid rgba(252, 165, 165, 0.35);
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.08);
+  color: #fca5a5;
+  font-size: 12.5px;
+  line-height: 1.4;
+  animation: zoneIn 0.2s ease both;
+}
+
 /* Format rule line (icon + text, vertically centered) */
 .upload-format-note {
   display: flex;

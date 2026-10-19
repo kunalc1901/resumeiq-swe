@@ -92,6 +92,10 @@
       </div>
     </div>
 
+    <div class="upload-error" *ngIf="uploadError" role="alert">
+      {{ uploadError }}
+    </div>
+
     <div class="upload-format-note">
       <span class="format-note-icon" aria-hidden="true">
         <app-icon name="file-text" [size]="14" />
