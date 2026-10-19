@@ -15,6 +15,12 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    cognito_sub: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
     is_admin: {
       type: Boolean,
       default: false,
@@ -27,6 +33,7 @@ const UserSchema = new mongoose.Schema(
   {
     collection: 'users',
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
+    versionKey: false,
   },
 );
 

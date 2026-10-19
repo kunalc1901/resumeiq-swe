@@ -6,7 +6,7 @@ const ScoreCategorySchema = new mongoose.Schema(
     score: { type: Number, default: 0 },
     max_score: { type: Number, default: 0 },
   },
-  { _id: false },
+  { _id: false, versionKey: false },
 );
 
 /** A matched or partially matched skill (partial items add a "gap"). */
@@ -18,7 +18,7 @@ const SkillMatchSchema = new mongoose.Schema(
     resume_evidence: { type: String, default: '' },
     gap: { type: String, default: '' },
   },
-  { _id: false },
+  { _id: false, versionKey: false },
 );
 
 /**
@@ -127,7 +127,7 @@ const AnalysisSchema = new mongoose.Schema(
     },
     limitations: [{ type: String, default: '' }],
   },
-  { _id: false },
+  { _id: false, versionKey: false },
 );
 
 const JobMatchSchema = new mongoose.Schema(
@@ -144,6 +144,7 @@ const JobMatchSchema = new mongoose.Schema(
     // The collection manages created_at / updated_at explicitly, so disable
     // mongoose's automatic created_at / updated_at timestamps.
     timestamps: false,
+    versionKey: false,
   },
 );
 

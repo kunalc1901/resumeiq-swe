@@ -2,6 +2,7 @@ const appRoot = require('app-root-path');
 const errors = require('common-errors');
 const { CognitoJwtVerifier } = require('aws-jwt-verify');
 const { env, logger } = require(`${appRoot}/config`);
+const userService = require(`${appRoot}/packages/user/user.service`);
 
 let verifier;
 
@@ -49,6 +50,18 @@ module.exports.verifyToken = async (req, res, next) => {
       email: payload.email,
       is_admin: payload['custom:is_admin'],
     };
+
+    // First authenticated request after signup: create the Mongo profile from
+    // the verified claims (insert-only, so manual edits are not overwritten).
+    await new Promise((resolve) => {
+      userService.upsertFromClaims(payload, (err) => {
+        if (err) {
+          logger.error(`Could not sync user profile for ${payload.sub}: ${err.message}`);
+        }
+        resolve();
+      });
+    });
+
     return next();
   } catch (err) {
     logger.warn(`Cognito token verification failed: ${err.message}`);

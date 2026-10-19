@@ -52,7 +52,7 @@ const AnalysisSchema = new mongoose.Schema(
     ats_strengths: [{ type: String, default: '' }],
     ats_improvements: [{ type: String, default: '' }],
   },
-  { _id: false },
+  { _id: false, versionKey: false },
 );
 
 const ResumeSchema = new mongoose.Schema(
@@ -68,6 +68,7 @@ const ResumeSchema = new mongoose.Schema(
     // The collection manages uploaded_at / processed_at explicitly, so disable
     // mongoose's automatic created_at / updated_at timestamps.
     timestamps: false,
+    versionKey: false,
   },
 );
 
