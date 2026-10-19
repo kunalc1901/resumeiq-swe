@@ -433,9 +433,47 @@
     margin-bottom: 16px;
   }
 
+  .alert-success {
+    padding: 10px 14px;
+    border-radius: 10px;
+    background: rgba(52, 211, 153, 0.12);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    color: #6ee7b7;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
   .btn-block {
     width: 100%;
     margin-top: 8px;
+  }
+
+  .verify-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0 0;
+  }
+
+  .link-btn {
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    cursor: pointer;
+    transition: color 0.18s ease;
+
+    &:hover {
+      color: var(--text-primary);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
   }
 
   .login-back {

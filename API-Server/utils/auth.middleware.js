@@ -1,36 +1,57 @@
-const jwt = require('jsonwebtoken');
+const appRoot = require('app-root-path');
 const errors = require('common-errors');
-const { env } = require('../config');
+const { CognitoJwtVerifier } = require('aws-jwt-verify');
+const { env, logger } = require(`${appRoot}/config`);
+
+let verifier;
 
 /**
- * Express middleware to verify the JWT in the Authorization header.
- * Attaches the decoded payload to req.user when valid, otherwise passes a 401.
+ * Lazily create the Cognito verifier so the app can boot without Cognito
+ * configuration (e.g. health checks) and fail clearly on authenticated calls.
+ * @returns {import('aws-jwt-verify').CognitoJwtVerifier}
+ */
+const getVerifier = () => {
+  if (!verifier) {
+    verifier = CognitoJwtVerifier.create({
+      userPoolId: env.cognito.userPoolId,
+      tokenUse: 'id',
+      clientId: env.cognito.userPoolClientId,
+    });
+  }
+  return verifier;
+};
+
+/**
+ * Express middleware that verifies the Cognito ID token sent in the
+ * Authorization header and exposes its claims on `req.user`. The user id is
+ * taken from the token's `sub` claim, so clients never send it themselves.
  * @param {Request} req
- * @param {Response} _res
+ * @param {Response} res
  * @param {Next} next
  */
-module.exports.verifyToken = (req, _res, next) => {
-  const header = req.headers['authorization'];
-  if (!header || !header.startsWith('Bearer ')) {
-    return next(
-      new errors.AuthenticationRequiredError(
-        'Authentication token is required',
-        'authentication_required',
-      ),
-    );
+module.exports.verifyToken = async (req, res, next) => {
+  if (!env.cognito.userPoolId || !env.cognito.userPoolClientId) {
+    logger.error('Cognito is not configured: set cognito.userPoolId and cognito.userPoolClientId');
+    return next(new Error('Cognito is not configured'));
   }
 
-  const token = header.split(' ')[1];
+  const header = req.headers.authorization || '';
+  const [scheme, token] = header.split(' ');
+
+  if (scheme !== 'Bearer' || !token) {
+    return next(new errors.AuthenticationRequiredError('Missing bearer token'));
+  }
+
   try {
-    const decoded = jwt.verify(token, env.auth.jwtSecret);
-    req.user = decoded;
+    const payload = await getVerifier().verify(token);
+    req.user = {
+      id: payload.sub,
+      email: payload.email,
+      is_admin: payload['custom:is_admin'],
+    };
     return next();
   } catch (err) {
-    return next(
-      new errors.AuthenticationRequiredError(
-        'Invalid or expired authentication token',
-        'invalid_token',
-      ),
-    );
+    logger.warn(`Cognito token verification failed: ${err.message}`);
+    return next(new errors.AuthenticationRequiredError('Invalid or expired token'));
   }
 };

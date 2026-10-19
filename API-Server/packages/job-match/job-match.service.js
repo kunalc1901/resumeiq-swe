@@ -73,16 +73,12 @@ const withResumeRef = async (matches) => {
 /**
  * Method to get all job matches of a user from the database, newest first,
  * with only the summary fields the history cards need.
- * @param {Object} query - supports user_id filter
+ * @param {Object} query - requires user_id (derived from the verified token)
  * @param {*} callback
  */
 exports.getJobMatches = (query, callback) => {
   const JobMatch = getJobMatchModel();
-  const filter = {};
-  if (query && query.user_id) {
-    filter.user_id = query.user_id;
-  }
-  JobMatch.find(filter, LIST_PROJECTION)
+  JobMatch.find({ user_id: query.user_id }, LIST_PROJECTION)
     .sort({ created_at: -1 })
     .lean()
     .then((data) => withResumeRef(data))
@@ -95,13 +91,15 @@ exports.getJobMatches = (query, callback) => {
 };
 
 /**
- * Method to get a single job match (full analysis) by document id.
+ * Method to get a single job match (full analysis) by document id. The query
+ * is scoped to the owner so one user cannot read another user's match.
  * @param {String} id
+ * @param {String} userId
  * @param {*} callback
  */
-exports.getJobMatchById = (id, callback) => {
+exports.getJobMatchById = (id, userId, callback) => {
   const JobMatch = getJobMatchModel();
-  JobMatch.findById(id)
+  JobMatch.findOne({ _id: id, user_id: userId })
     .lean()
     .then(async (data) => {
       if (!data) {

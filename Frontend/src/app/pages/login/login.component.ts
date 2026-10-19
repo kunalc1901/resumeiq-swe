@@ -26,6 +26,11 @@ export class LoginComponent implements OnInit {
   passwordFocused: boolean = false;
   passwordValid: boolean = false;
 
+  // Email verification step (pools that require sign-up confirmation)
+  verificationPending: boolean = false;
+  verificationCode: string = '';
+  verificationNotice: string = '';
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -68,20 +73,26 @@ export class LoginComponent implements OnInit {
   /**
    * Method to sign-in user
    */
-  signIn() {
+  async signIn(): Promise<void> {
     if (this.user && this.user.email && this.user.password) {
       this.disableLoginButton = true;
-      this.authService
-        .login(this.user.email, this.user.password)
-        .then(() => {
-          this.router.navigate(['dashboard']);
-        })
-        .catch((err) => {
-          console.error(`Error occurred while signing-in, err:`, err);
-          this.disableLoginButton = false;
-          this.showLoginErrorMsg = true;
-          this.loginErrMsg = this.getErrorMessage(err, MESSAGES.ERROR.LOGIN_FAILED);
-        });
+      this.showLoginErrorMsg = false;
+      this.verificationNotice = '';
+      try {
+        await this.authService.login(this.user.email, this.user.password);
+        this.router.navigate(['dashboard']);
+      } catch (err) {
+        console.error(`Error occurred while signing-in, err:`, err);
+        this.disableLoginButton = false;
+        // Unconfirmed account - ask for the emailed verification code.
+        if ((err as any)?.name === 'UserNotConfirmedException') {
+          this.startVerification();
+          return;
+        }
+        this.showLoginErrorMsg = true;
+        // Keep technical details out of the UI - show a generic message.
+        this.loginErrMsg = MESSAGES.ERROR.LOGIN_FAILED;
+      }
     } else {
       this.showLoginErrorMsg = true;
       this.loginErrMsg = 'Please enter email and password.';
@@ -89,9 +100,11 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Method to sign-up a new user, then log them in automatically
+   * Method to sign-up a new user. When the pool requires email verification
+   * the card switches to the verification step, otherwise the user is signed
+   * in automatically.
    */
-  signUp() {
+  async signUp(): Promise<void> {
     if (
       this.user &&
       this.user.first_name &&
@@ -106,18 +119,29 @@ export class LoginComponent implements OnInit {
         return;
       }
       this.disableLoginButton = true;
-      this.authService
-        .signup(this.user)
-        .then(() => this.authService.login(this.user.email, this.user.password!))
-        .then(() => {
-          this.router.navigate(['dashboard']);
-        })
-        .catch((err) => {
-          console.error(`Error occurred while signing-up, err:`, err);
-          this.disableLoginButton = false;
-          this.showLoginErrorMsg = true;
-          this.loginErrMsg = this.getErrorMessage(err, MESSAGES.ERROR.DEFAULT);
-        });
+      this.showLoginErrorMsg = false;
+      this.verificationNotice = '';
+      try {
+        const res = await this.authService.signup(this.user);
+        if (res?.needsConfirmation) {
+          // The pool requires email verification - ask for the emailed code.
+          this.startVerification();
+          return;
+        }
+        await this.authService.login(this.user.email, this.user.password);
+        this.router.navigate(['dashboard']);
+      } catch (err) {
+        console.error(`Error occurred while signing-up, err:`, err);
+        this.disableLoginButton = false;
+        // Signup succeeded but the account still needs confirming.
+        if ((err as any)?.name === 'UserNotConfirmedException') {
+          this.startVerification();
+          return;
+        }
+        this.showLoginErrorMsg = true;
+        // Keep technical details out of the UI - show a generic message.
+        this.loginErrMsg = MESSAGES.ERROR.SIGNUP_FAILED;
+      }
     } else {
       this.showLoginErrorMsg = true;
       this.loginErrMsg = 'Please fill in all fields.';
@@ -125,11 +149,77 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Method to extract a human readable message from an API error
-   * @param err
-   * @param fallback
+   * Method to verify the email with the code Cognito sent, then sign the user in
    */
-  private getErrorMessage(err: any, fallback: string): string {
-    return err?.error?.message || err?.message || fallback;
+  async verifyEmail(): Promise<void> {
+    if (!this.verificationCode) {
+      this.showLoginErrorMsg = true;
+      this.loginErrMsg = 'Please enter the verification code.';
+      return;
+    }
+    this.disableLoginButton = true;
+    this.showLoginErrorMsg = false;
+    this.verificationNotice = '';
+    try {
+      await this.authService.confirmSignup(this.user.email, this.verificationCode);
+    } catch (err) {
+      console.error(`Error occurred while verifying the email, err:`, err);
+      this.disableLoginButton = false;
+      this.showLoginErrorMsg = true;
+      // Keep technical details out of the UI - show a generic message.
+      this.loginErrMsg = MESSAGES.ERROR.VERIFICATION_FAILED;
+      return;
+    }
+    try {
+      await this.authService.login(this.user.email, this.user.password!);
+      this.router.navigate(['dashboard']);
+    } catch (err) {
+      console.error(`Error occurred while signing-in after verification, err:`, err);
+      this.disableLoginButton = false;
+      this.showLoginErrorMsg = true;
+      this.loginErrMsg = MESSAGES.ERROR.LOGIN_FAILED;
+    }
+  }
+
+  /**
+   * Method to resend the signup verification code
+   */
+  async resendCode(): Promise<void> {
+    this.disableLoginButton = true;
+    this.showLoginErrorMsg = false;
+    this.verificationNotice = '';
+    try {
+      await this.authService.resendSignupCode(this.user.email);
+      this.verificationNotice = 'A new code has been sent to your email.';
+    } catch (err) {
+      console.error(`Error occurred while resending the verification code, err:`, err);
+      this.showLoginErrorMsg = true;
+      this.loginErrMsg = MESSAGES.ERROR.RESEND_FAILED;
+    } finally {
+      this.disableLoginButton = false;
+    }
+  }
+
+  /**
+   * Method to switch the card to the email verification step
+   */
+  private startVerification(): void {
+    this.verificationPending = true;
+    this.verificationCode = '';
+    this.verificationNotice = '';
+    this.showLoginErrorMsg = false;
+    this.loginErrMsg = '';
+    this.disableLoginButton = false;
+  }
+
+  /**
+   * Method to leave the verification step and return to the form
+   */
+  cancelVerification(): void {
+    this.verificationPending = false;
+    this.verificationCode = '';
+    this.verificationNotice = '';
+    this.showLoginErrorMsg = false;
+    this.loginErrMsg = '';
   }
 }

@@ -95,21 +95,20 @@ const config = convict({
       env: 'SQ_DB_TLS',
     },
   },
-  auth: {
-    jwtSecret: {
-      doc: 'Secret used to sign and verify JWTs.',
+  cognito: {
+    userPoolId: {
+      doc: 'Cognito user pool id used to verify incoming ID tokens.',
       format: String,
-      default: 'change-me-in-production',
-      sensitive: true,
-      arg: 'jwt-secret',
-      env: 'SQ_JWT_SECRET',
+      default: '',
+      arg: 'cognito-user-pool-id',
+      env: 'SQ_COGNITO_USER_POOL_ID',
     },
-    jwtExpiresIn: {
-      doc: 'JWT lifetime, e.g. 1d or 8h.',
+    userPoolClientId: {
+      doc: 'Cognito app client id used to verify incoming ID tokens.',
       format: String,
-      default: '1d',
-      arg: 'jwt-expires-in',
-      env: 'SQ_JWT_EXPIRES_IN',
+      default: '',
+      arg: 'cognito-client-id',
+      env: 'SQ_COGNITO_CLIENT_ID',
     },
   },
   logging: {

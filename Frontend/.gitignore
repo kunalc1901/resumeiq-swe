@@ -43,3 +43,6 @@ Thumbs.db
 
 *.pem
 .angular
+
+# Local environment (real Cognito values)
+/src/environments/environment.dev.ts

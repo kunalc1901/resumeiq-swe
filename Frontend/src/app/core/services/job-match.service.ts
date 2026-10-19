@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,7 +12,6 @@ import {
 } from '../models/job-match.model';
 import { MOCK_JOB_MATCH } from '../mocks/job-match.mock';
 import { ApiService } from './api.service';
-import { RESUME_USER_ID } from './resume.service';
 
 const JOB_MATCH_URL = '/job-match';
 
@@ -30,11 +28,13 @@ export class JobMatchService {
 
   constructor(private apiService: ApiService) {}
 
-  /** Fetch all previous job matches of a user, newest first. */
-  getHistory(userId: string = RESUME_USER_ID): Observable<JobMatchSummary[]> {
-    const params = new HttpParams().set('user_id', userId);
+  /**
+   * Fetch all previous job matches of the logged-in user, newest first. The
+   * user is derived from the token on the API side.
+   */
+  getHistory(): Observable<JobMatchSummary[]> {
     return this.apiService
-      .get(JOB_MATCH_URL, undefined, params)
+      .get(JOB_MATCH_URL)
       .pipe(
         map((records: JobMatchListRecord[]) =>
           (records ?? []).map((record) => this.toSummary(record)),

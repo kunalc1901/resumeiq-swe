@@ -5,6 +5,10 @@
     "port": 27017,
     "srvRecord": false
   },
+  "cognito": {
+    "userPoolId": "",
+    "userPoolClientId": ""
+  },
   "logging": {
     "level": "info"
   }

@@ -13,15 +13,12 @@ const getResumeModel = () => {
 /**
  * Method to get the latest analysed resume of a user. "Latest" means the most
  * recently uploaded resume that has an analysis attached.
- * @param {Object} query - supports user_id filter
+ * @param {Object} query - requires user_id (derived from the verified token)
  * @param {*} callback
  */
 exports.getLatestAnalyzedResume = (query, callback) => {
   const Resume = getResumeModel();
-  const filter = { analysis: { $ne: null } };
-  if (query && query.user_id) {
-    filter.user_id = query.user_id;
-  }
+  const filter = { user_id: query.user_id, analysis: { $ne: null } };
   Resume.findOne(filter)
     .sort({ uploaded_at: -1 })
     .then((data) => {

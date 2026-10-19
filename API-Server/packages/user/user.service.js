@@ -21,7 +21,7 @@ exports.getUsers = (query, callback) => {
   if (query && query.email) {
     filter.email = query.email;
   }
-  User.find(filter, { password: 0 })
+  User.find(filter)
     .then((data) => {
       return callback(null, data);
     })

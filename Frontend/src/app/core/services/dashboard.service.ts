@@ -1,4 +1,3 @@
-import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -23,7 +22,6 @@ import {
   MOCK_SUGGESTED_QUESTIONS,
 } from '../mocks/dashboard.mock';
 import { ApiService } from './api.service';
-import { RESUME_USER_ID } from './resume.service';
 
 const DASHBOARD_URL = '/dashboard';
 
@@ -38,16 +36,13 @@ export class DashboardService {
   constructor(private apiService: ApiService) {}
 
   /**
-   * Method to get the latest analysed resume of a user
-   * @param userId
+   * Method to get the latest analysed resume of the logged-in user. The user
+   * is derived from the token on the API side.
    * @returns
    */
-  getLatestAnalyzedResume(
-    userId: string = RESUME_USER_ID,
-  ): Observable<ResumeRecord | null> {
-    const params = new HttpParams().set('user_id', userId);
+  getLatestAnalyzedResume(): Observable<ResumeRecord | null> {
     return this.apiService
-      .get(DASHBOARD_URL, undefined, params)
+      .get(DASHBOARD_URL)
       .pipe(
         map(
           (payload: { latest_resume: ResumeRecord | null }) =>

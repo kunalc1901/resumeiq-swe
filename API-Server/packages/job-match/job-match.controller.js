@@ -14,18 +14,7 @@ const jobMatchService = require('./job-match.service');
 exports.getJobMatches = (req, res, next) => {
   logger.debug('Request received to get job matches');
 
-  const userId = req.query.user_id || (req.user && req.user.id);
-  if (!userId) {
-    return ResponseHandler.handleResponse(
-      new errors.ValidationError('user_id is required', 'user_id_required'),
-      null,
-      req,
-      res,
-      next,
-    );
-  }
-
-  jobMatchService.getJobMatches({ user_id: userId }, (err, data) => {
+  jobMatchService.getJobMatches({ user_id: req.user.id }, (err, data) => {
     logger.info(`Got response for job matches, err: ${err}`);
     ResponseHandler.handleResponse(err, data, req, res, next);
   });
@@ -51,7 +40,7 @@ exports.getJobMatchById = (req, res, next) => {
     );
   }
 
-  jobMatchService.getJobMatchById(id, (err, data) => {
+  jobMatchService.getJobMatchById(id, req.user.id, (err, data) => {
     logger.info(`Got response for job match, err: ${err}`);
     if (err) {
       return ResponseHandler.handleResponse(err, null, req, res, next);

@@ -1,15 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('./user.controller');
-const { verifyToken } = require('../../utils/auth.middleware');
+const { verifyToken } = require('../../utils');
 
-// Route to get users (protected)
+// Route to get users (authenticated)
 router.get('/', verifyToken, userController.getUsers);
-
-// Route to login
-router.post('/login', userController.login);
-
-// Route to signup
-router.post('/signup', userController.signup);
 
 module.exports = router;

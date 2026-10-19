@@ -12,16 +12,12 @@ const getResumeModel = () => {
 
 /**
  * Method to get resumes for a user from the database, newest first.
- * @param {Object} query - supports user_id filter
+ * @param {Object} query - requires user_id (derived from the verified token)
  * @param {*} callback
  */
 exports.getResumes = (query, callback) => {
   const Resume = getResumeModel();
-  const filter = {};
-  if (query && query.user_id) {
-    filter.user_id = query.user_id;
-  }
-  Resume.find(filter)
+  Resume.find({ user_id: query.user_id })
     .sort({ uploaded_at: -1 })
     .then((data) => {
       return callback(null, data);
