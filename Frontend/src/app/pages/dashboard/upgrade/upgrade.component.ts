@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { SubscriptionService } from '../../../core/services/subscription.service';
 import {
@@ -12,6 +12,7 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     CommonModule,

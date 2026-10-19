@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NavbarComponent } from './navbar/navbar.component';
 import { HeroComponent } from './hero/hero.component';
 import { FeatureSectionComponent } from './feature-section/feature-section.component';
@@ -10,6 +10,7 @@ import { FinalCtaComponent } from './final-cta/final-cta.component';
 import { FooterComponent } from './footer/footer.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     NavbarComponent,

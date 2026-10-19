@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SubscriptionService } from '../../../core/services/subscription.service';
 import { JobMatchService } from '../../../core/services/job-match.service';
 import { FEATURE_IDS } from '../../../core/constants/feature-ids';
-import { JobMatch } from '../../../core/models/job-match.model';
+import { JobMatchSummary } from '../../../core/models/job-match.model';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { AnalysisLoadingComponent } from '../../../shared/analysis-loading/analysis-loading.component';
@@ -16,6 +16,7 @@ import { JobMatchCardComponent } from '../../../shared/job-match-card/job-match-
 type MatchMode = 'idle' | 'loading' | 'limit';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     CommonModule,
@@ -38,7 +39,7 @@ export class JobMatchComponent implements OnInit {
   selectedResume = 'Software_Engineer_Resume.pdf';
   jdText = '';
 
-  history: JobMatch[] = [];
+  history: JobMatchSummary[] = [];
   historyLoading = true;
   historyError = false;
 

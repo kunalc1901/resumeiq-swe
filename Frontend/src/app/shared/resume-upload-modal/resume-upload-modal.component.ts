@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
+  ChangeDetectionStrategy, Component,
   ElementRef,
   EventEmitter,
   HostListener,
@@ -18,6 +18,7 @@ import { AppIconComponent } from '../app-icon/app-icon.component';
  * but no file handling, upload or save logic is implemented yet.
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, AppIconComponent],
   selector: 'app-resume-upload-modal',

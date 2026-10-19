@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services';
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -8,6 +8,7 @@ import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, FormsModule, AppIconComponent, PageHeaderComponent],
   selector: 'app-profile',

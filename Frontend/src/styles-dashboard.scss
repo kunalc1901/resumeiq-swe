@@ -216,6 +216,15 @@
   color: var(--text-primary);
 }
 
+/* Section subtitle on dashboard pages. The homepage .section-sub is sized for
+   much larger titles, so dashboard pages use a smaller subtitle hierarchy. */
+.dash-page .section-sub {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin: 5px 0 0;
+}
+
 .section-row {
   display: flex;
   align-items: center;
@@ -223,18 +232,6 @@
   gap: 16px;
   margin-bottom: 16px;
   flex-wrap: wrap;
-}
-
-.section-link {
-  font-size: 13.5px;
-  font-weight: 600;
-  color: #a5b4fc;
-  text-decoration: none;
-}
-
-.section-link:hover {
-  text-decoration: underline;
-  color: #c7d2fe;
 }
 
 /* Avatar */

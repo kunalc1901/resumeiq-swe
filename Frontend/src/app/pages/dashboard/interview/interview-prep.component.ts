@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../../core/services/dashboard.service';
@@ -18,6 +18,7 @@ import { UsageLimitCardComponent } from '../../../shared/usage-limit-card/usage-
 type InterviewPhase = 'setup' | 'intro' | 'answering' | 'evaluating' | 'limit';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     CommonModule,

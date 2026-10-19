@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { JobMatchRequirement } from '../../core/models/job-match.model';
 import {
   categoryInfo,
@@ -12,6 +12,7 @@ import {
 import { AppIconComponent } from '../app-icon/app-icon.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, AppIconComponent],
   selector: 'app-job-match-requirement',

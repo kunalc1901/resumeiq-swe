@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { computeUsageTone } from '../../core/services/subscription.service';
 import { UsageEntry } from '../../core/models/subscription.model';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, ProgressBarComponent],
   selector: 'app-usage-progress',

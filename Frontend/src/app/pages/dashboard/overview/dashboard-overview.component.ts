@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AuthService, SubscriptionService } from '../../../core/services';
 import { DashboardService } from '../../../core/services/dashboard.service';
-import { ActivityGroup, Insight, ResumeStatus, Stat } from '../../../core/models/dashboard.model';
+import { ActivityGroup, ResumeStatus, Stat } from '../../../core/models/dashboard.model';
+import { ResumeAnalysisPayload, ResumeRecord } from '../../../core/models/resume.model';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
 import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { StatCardComponent } from '../../../shared/stat-card/stat-card.component';
@@ -13,6 +14,7 @@ import { PremiumBadgeComponent } from '../../../shared/premium-badge/premium-bad
 import { TruncateTitleDirective } from '../../../shared/truncate-title/truncate-title.directive';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     CommonModule,
@@ -30,9 +32,8 @@ import { TruncateTitleDirective } from '../../../shared/truncate-title/truncate-
   styleUrls: ['./dashboard-overview.component.scss'],
 })
 export class DashboardOverviewComponent implements OnInit {
-  resumeStatus: ResumeStatus | null = null;
-  stats: Stat[] = [];
-  insights: Insight[] = [];
+  resumeStatus = signal<ResumeStatus | null>(null);
+  stats = signal<Stat[]>([]);
   activity: ActivityGroup[] = [];
 
   greeting = 'Good morning';
@@ -64,9 +65,77 @@ export class DashboardOverviewComponent implements OnInit {
     const user = this.authService.getUser();
     this.firstName = user?.first_name || 'John';
 
-    this.dashboardService.getResumeStatus().subscribe((s) => (this.resumeStatus = s));
-    this.dashboardService.getStats().subscribe((s) => (this.stats = s));
-    this.dashboardService.getInsights().subscribe((i) => (this.insights = i));
+    this.loadLatestAnalyzedResume();
     this.dashboardService.getRecentActivity().subscribe((a) => (this.activity = a));
+  }
+
+  /** Fetches the latest analysed resume and derives the resume card + stats. */
+  private loadLatestAnalyzedResume(): void {
+    this.dashboardService.getLatestAnalyzedResume().subscribe({
+      next: (record) => {
+        if (!record || !record.analysis) {
+          this.resumeStatus.set(null);
+          this.stats.set([]);
+          return;
+        }
+        this.resumeStatus.set({
+          fileName: record.file_name,
+          overallScore: record.analysis.overall_score,
+          atsScore: record.analysis.ats_score,
+        });
+        this.stats.set(this.toStats(record.analysis));
+      },
+      error: (err) => {
+        console.error('Error occurred while fetching dashboard data, err:', err);
+        this.resumeStatus.set(null);
+        this.stats.set([]);
+      },
+    });
+  }
+
+  /** Maps the analysis payload to the quick stat cards. */
+  private toStats(analysis: ResumeAnalysisPayload): Stat[] {
+    const skillGroups = Object.values(analysis.skills ?? {});
+    const skillCount = skillGroups.reduce(
+      (total, skills) => total + (skills?.length ?? 0),
+      0,
+    );
+    const improvements = analysis.improvements?.length ?? 0;
+    return [
+      {
+        id: 'score',
+        label: 'Overall Resume Score',
+        value: `${analysis.overall_score}`,
+        sub: 'out of 100',
+        icon: 'star',
+        tone: 'accent',
+        progress: analysis.overall_score,
+      },
+      {
+        id: 'ats',
+        label: 'ATS Compatibility',
+        value: `${analysis.ats_score}%`,
+        sub: 'parses cleanly',
+        icon: 'file-text',
+        tone: 'success',
+        progress: analysis.ats_score,
+      },
+      {
+        id: 'skills',
+        label: 'Skills Identified',
+        value: `${skillCount}`,
+        sub: `across ${skillGroups.length} group${skillGroups.length === 1 ? '' : 's'}`,
+        icon: 'layers',
+        tone: 'info',
+      },
+      {
+        id: 'gaps',
+        label: 'Areas to Improve',
+        value: `${improvements}`,
+        sub: 'actionable items',
+        icon: 'alert-triangle',
+        tone: 'warn',
+      },
+    ];
   }
 }

@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppIconComponent } from '../../../shared/app-icon/app-icon.component';
-import { SubscriptionStatusComponent } from '../../../shared/subscription-status/subscription-status.component';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { AuthService, SubscriptionService, NotificationService, UploadTask } from '../../../core/services';
 
@@ -18,8 +17,9 @@ interface NavGroup {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
-  imports: [CommonModule, RouterModule, AppIconComponent, SubscriptionStatusComponent, LoaderComponent],
+  imports: [CommonModule, RouterModule, AppIconComponent, LoaderComponent],
   selector: 'app-dashboard-layout',
   templateUrl: './dashboard-layout.component.html',
   styleUrls: ['./dashboard-layout.component.scss'],

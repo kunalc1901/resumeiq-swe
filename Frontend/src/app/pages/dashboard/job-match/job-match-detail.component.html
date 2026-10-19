@@ -43,6 +43,12 @@
             <span class="tag tag-accent">{{ match.job.seniority }}</span>
             <span class="tag tag-accent">{{ label }}</span>
           </div>
+          <p class="jm-hero-resume" [class.is-missing]="!match.resume">
+            <app-icon name="file-text" [size]="14" />
+            <span *ngIf="match.resume">Matched against</span>
+            <strong *ngIf="match.resume">{{ match.resume.fileName }}</strong>
+            <span *ngIf="!match.resume">Resume no longer available</span>
+          </p>
           <p class="jm-hero-summary">{{ match.job.summary }}</p>
           <p class="jm-hero-sentence">{{ sentence }}</p>
         </div>

@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppIconComponent } from '../app-icon/app-icon.component';
 import { PremiumBadgeComponent } from '../premium-badge/premium-badge.component';
 import { PlanConfig } from '../../core/constants/plan.config';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, AppIconComponent, PremiumBadgeComponent],
   selector: 'app-plan-card',

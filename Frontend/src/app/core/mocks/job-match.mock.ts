@@ -3,8 +3,9 @@ import { JobMatch } from '../models/job-match.model';
 /**
  * Mock Job Match data for development.
  *
- * Replace with real API responses via JobMatchService once the backend
- * job-match history/detail endpoints exist.
+ * Only the "analyze" form still uses this mock; the match history and match
+ * details come from the ResumeIQ API. Replace with the real analyse response
+ * once that endpoint exists.
  */
 
 export const MOCK_JOB_MATCH: JobMatch = {
@@ -12,6 +13,7 @@ export const MOCK_JOB_MATCH: JobMatch = {
   analyzedAt: 'Today',
   matchScore: 69,
   matchLabel: 'Moderate Alignment',
+  resume: null,
   job: {
     title: 'Software Engineer',
     seniority: 'Mid-Level',
@@ -254,47 +256,3 @@ export const MOCK_JOB_MATCH: JobMatch = {
     'Detail web services, protocols (REST, JSON API design), and HTTP handling explicitly within backend responsibility bullets.',
   ],
 };
-
-function makeVariant(
-  base: JobMatch,
-  id: string,
-  analyzedAt: string,
-  title: string,
-  seniority: string,
-  summary: string,
-  matchScore: number,
-  matchLabel: string,
-): JobMatch {
-  return {
-    ...base,
-    id,
-    analyzedAt,
-    matchScore,
-    matchLabel,
-    job: { ...base.job, title, seniority, summary },
-  };
-}
-
-export const MOCK_JOB_MATCH_HISTORY: JobMatch[] = [
-  MOCK_JOB_MATCH,
-  makeVariant(
-    MOCK_JOB_MATCH,
-    'match-2',
-    'Yesterday',
-    'Senior Backend Engineer',
-    'Senior',
-    'Design scalable APIs and microservices on AWS, using Node.js, TypeScript and PostgreSQL.',
-    84,
-    'Strong Alignment',
-  ),
-  makeVariant(
-    MOCK_JOB_MATCH,
-    'match-3',
-    '3 days ago',
-    'Full Stack Developer',
-    'Mid-Level',
-    'Build web applications across the full stack with Angular, Node.js and relational databases.',
-    72,
-    'Moderate Alignment',
-  ),
-];

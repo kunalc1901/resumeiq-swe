@@ -50,7 +50,7 @@
     <!-- Filled slots -->
     <article
       class="slot-card"
-      *ngFor="let resume of resumes"
+      *ngFor="let resume of resumes()"
       [class.selected]="resume.selected"
       (click)="selectResume(resume)"
       [attr.aria-label]="resume.fileName"
@@ -131,13 +131,19 @@
     </button>
   </div>
 
-  <!-- Empty hint when there are no resumes yet -->
-  <div class="slot-empty-hint" *ngIf="!resumes.length">
-    Your ResumeIQ workspace is empty. Add your first resume to start analysing your profile.
+  <!-- Empty / error hint when there are no resumes to show -->
+  <div class="slot-empty-hint" *ngIf="!resumes().length && !loading()">
+    <ng-container *ngIf="loadError(); else emptyWorkspace">
+      We couldn't load your resumes. Make sure the API server and MongoDB are
+      running, then refresh the page.
+    </ng-container>
+    <ng-template #emptyWorkspace>
+      Your ResumeIQ workspace is empty. Add your first resume to start analysing your profile.
+    </ng-template>
   </div>
 
   <!-- Analysis -->
-  <ng-container *ngIf="analysis">
+  <ng-container *ngIf="analysis() as a">
     <div class="dash-section">
       <app-page-header
         title="Resume Analysis"
@@ -149,16 +155,16 @@
     <div class="scores-grid">
       <div class="score-hero dash-card">
         <div class="score-hero-main">
-          <app-score-ring [value]="analysis.overallScore" [size]="132">
+          <app-score-ring [value]="a.overallScore" [size]="132">
             <div class="hero-ring-value">
-              <strong>{{ analysis.overallScore }}</strong>
+              <strong>{{ a.overallScore }}</strong>
               <span>/100</span>
             </div>
           </app-score-ring>
           <div class="score-hero-meta">
             <span class="section-label">Overall Score</span>
             <p class="score-hero-note">
-              {{ analysis.scoreSummary }}
+              {{ a.scoreSummary }}
             </p>
           </div>
         </div>
@@ -166,10 +172,10 @@
 
       <div class="ats-card dash-card dash-card-pad">
         <span class="section-label">ATS Compatibility</span>
-        <div class="ats-value">{{ analysis.atsScore }}%</div>
-        <app-progress-bar [value]="analysis.atsScore" [showValue]="false" />
+        <div class="ats-value">{{ a.atsScore }}%</div>
+        <app-progress-bar [value]="a.atsScore" [showValue]="false" />
         <p class="ats-note">
-          {{ analysis.atsSummary }}
+          {{ a.atsSummary }}
         </p>
       </div>
     </div>
@@ -220,17 +226,17 @@
     </div>
 
     <!-- Summary -->
-    <section class="dash-section">
+    <section class="dash-section" *ngIf="a.summary">
       <app-collapsible-section title="Summary" icon="layers" [open]="true">
-        <p class="summary-text">{{ analysis.summary }}</p>
+        <p class="summary-text">{{ a.summary }}</p>
       </app-collapsible-section>
     </section>
 
     <!-- Skills -->
-    <section class="dash-section">
+    <section class="dash-section" *ngIf="a.skills.length">
       <app-collapsible-section title="Skills" icon="code" [open]="true">
         <div class="skills-groups">
-          <div class="skill-group" *ngFor="let group of analysis.skills">
+          <div class="skill-group" *ngFor="let group of a.skills">
             <div class="skill-group-name">{{ group.group }}</div>
             <div class="skill-tags">
               <span class="tag tag-accent" *ngFor="let skill of group.skills">{{ skill }}</span>
@@ -241,16 +247,18 @@
     </section>
 
     <!-- Experience -->
-    <section class="dash-section">
+    <section class="dash-section" *ngIf="a.experience.length">
       <app-collapsible-section title="Experience" icon="briefcase" [open]="false">
         <div class="timeline">
-          <div class="timeline-item" *ngFor="let exp of analysis.experience">
+          <div class="timeline-item" *ngFor="let exp of a.experience">
             <div class="timeline-dot" aria-hidden="true"></div>
             <div class="timeline-card dash-card dash-card-pad">
               <div class="timeline-head">
                 <div>
                   <div class="timeline-role">{{ exp.role }}</div>
-                  <div class="timeline-company">{{ exp.company }} · {{ exp.period }}</div>
+                  <div class="timeline-company">
+                    {{ exp.company }}<ng-container *ngIf="exp.period"> · {{ exp.period }}</ng-container>
+                  </div>
                 </div>
               </div>
               <ul class="timeline-points">
@@ -263,10 +271,10 @@
     </section>
 
     <!-- Projects -->
-    <section class="dash-section">
+    <section class="dash-section" *ngIf="a.projects.length">
       <app-collapsible-section title="Projects" icon="folder" [open]="false">
         <div class="projects-grid card-grid card-grid-3">
-          <article class="project-card dash-card dash-card-pad dash-card-hover" *ngFor="let project of analysis.projects">
+          <article class="project-card dash-card dash-card-pad dash-card-hover" *ngFor="let project of a.projects">
             <h3 class="project-name">{{ project.name }}</h3>
             <p class="project-desc">{{ project.description }}</p>
             <div class="project-stack">
@@ -278,24 +286,26 @@
     </section>
 
     <!-- Education -->
-    <section class="dash-section">
+    <section class="dash-section" *ngIf="a.education.length">
       <app-collapsible-section title="Education" icon="graduation-cap" [open]="false">
         <div class="education-list">
-          <div class="education-item dash-card dash-card-pad" *ngFor="let edu of analysis.education">
+          <div class="education-item dash-card dash-card-pad" *ngFor="let edu of a.education">
             <div class="education-degree">{{ edu.degree }}</div>
-            <div class="education-school">{{ edu.institution }} · {{ edu.period }}</div>
+            <div class="education-school">
+              {{ edu.institution }}<ng-container *ngIf="edu.period"> · {{ edu.period }}</ng-container>
+            </div>
           </div>
         </div>
       </app-collapsible-section>
     </section>
 
     <!-- Overall score insights -->
-    <div class="dash-section">
+    <div class="dash-section" *ngIf="a.strengths.length || a.improvements.length">
       <div class="section-row">
         <h2 class="section-heading">Overall Score Insights</h2>
       </div>
       <div class="two-col">
-        <section class="dash-card dash-card-pad">
+        <section class="dash-card dash-card-pad" *ngIf="a.strengths.length">
           <div class="card-head">
             <h2 class="card-title">Strengths</h2>
             <span class="icon-tile icon-tile-sm" aria-hidden="true">
@@ -303,11 +313,11 @@
             </span>
           </div>
           <ul class="check-list">
-            <li *ngFor="let item of analysis.strengths">{{ item }}</li>
+            <li *ngFor="let item of a.strengths">{{ item }}</li>
           </ul>
         </section>
 
-        <section class="dash-card dash-card-pad">
+        <section class="dash-card dash-card-pad" *ngIf="a.improvements.length">
           <div class="card-head">
             <h2 class="card-title">Areas of Improvement</h2>
             <span class="icon-tile icon-tile-sm" aria-hidden="true">
@@ -315,19 +325,19 @@
             </span>
           </div>
           <ul class="improve-list">
-            <li *ngFor="let item of analysis.improvements">{{ item }}</li>
+            <li *ngFor="let item of a.improvements">{{ item }}</li>
           </ul>
         </section>
       </div>
     </div>
 
     <!-- ATS insights -->
-    <div class="dash-section">
+    <div class="dash-section" *ngIf="a.atsStrengths.length || a.atsImprovements.length">
       <div class="section-row">
         <h2 class="section-heading">ATS Insights</h2>
       </div>
       <div class="two-col">
-        <section class="dash-card dash-card-pad">
+        <section class="dash-card dash-card-pad" *ngIf="a.atsStrengths.length">
           <div class="card-head">
             <h2 class="card-title">ATS Strengths</h2>
             <span class="icon-tile icon-tile-sm" aria-hidden="true">
@@ -335,11 +345,11 @@
             </span>
           </div>
           <ul class="check-list">
-            <li *ngFor="let item of analysis.atsStrengths">{{ item }}</li>
+            <li *ngFor="let item of a.atsStrengths">{{ item }}</li>
           </ul>
         </section>
 
-        <section class="dash-card dash-card-pad">
+        <section class="dash-card dash-card-pad" *ngIf="a.atsImprovements.length">
           <div class="card-head">
             <h2 class="card-title">ATS Improvements</h2>
             <span class="icon-tile icon-tile-sm" aria-hidden="true">
@@ -347,7 +357,7 @@
             </span>
           </div>
           <ul class="improve-list">
-            <li *ngFor="let item of analysis.atsImprovements">{{ item }}</li>
+            <li *ngFor="let item of a.atsImprovements">{{ item }}</li>
           </ul>
         </section>
       </div>
@@ -376,7 +386,7 @@
     (upgrade)="goUpgrade()"
   />
 
-  <!-- Resume upload dialog (UI only for now) -->
+  <!-- Resume upload dialog -->
   <app-resume-upload-modal
     [open]="uploadModalOpen"
     (dismiss)="uploadModalOpen = false"

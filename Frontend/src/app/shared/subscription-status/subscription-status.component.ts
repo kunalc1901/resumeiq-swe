@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { SubscriptionService } from '../../core/services/subscription.service';
 import { AppIconComponent } from '../app-icon/app-icon.component';
 import { PremiumBadgeComponent } from '../premium-badge/premium-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, RouterLink, AppIconComponent, PremiumBadgeComponent],
   selector: 'app-subscription-status',

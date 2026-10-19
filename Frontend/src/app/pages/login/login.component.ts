@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services';
@@ -8,6 +8,7 @@ import { MESSAGES } from '../../constants/constants';
 import { PasswordPolicyComponent } from '../../shared/password-policy/password-policy.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, FormsModule, RouterLink, PasswordPolicyComponent],
   selector: 'app-login',

@@ -1,6 +1,5 @@
 export interface ResumeStatus {
   fileName: string;
-  lastAnalyzed: string;
   overallScore: number;
   atsScore: number;
 }
@@ -15,14 +14,6 @@ export interface Stat {
   icon: string;
   tone: StatTone;
   progress?: number;
-}
-
-export interface Insight {
-  id: string;
-  icon: string;
-  category: string;
-  title: string;
-  description: string;
 }
 
 export interface ActivityItem {

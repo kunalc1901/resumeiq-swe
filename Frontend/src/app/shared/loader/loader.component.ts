@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
+  ChangeDetectionStrategy, Component,
   ElementRef,
   EventEmitter,
   Input,
@@ -22,6 +22,7 @@ import {
  *     <app-loader [visible]="loading" />
  */
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule],
   selector: 'app-loader',

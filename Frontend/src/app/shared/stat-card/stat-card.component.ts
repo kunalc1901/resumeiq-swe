@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { AppIconComponent } from '../app-icon/app-icon.component';
 import { ProgressBarComponent } from '../progress-bar/progress-bar.component';
 import { Stat } from '../../core/models/dashboard.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, AppIconComponent, ProgressBarComponent],
   selector: 'app-stat-card',

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AuthService, SubscriptionService } from '../../../core/services';
@@ -8,6 +8,7 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
 import { PremiumBadgeComponent } from '../../../shared/premium-badge/premium-badge.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [
     CommonModule,

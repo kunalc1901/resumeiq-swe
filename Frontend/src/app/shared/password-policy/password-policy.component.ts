@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
+  ChangeDetectionStrategy, Component,
   EventEmitter,
   Input,
   OnChanges,
@@ -19,6 +19,7 @@ export interface PasswordRule {
 type StrengthLevel = 'weak' | 'fair' | 'good' | 'strong';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, AppIconComponent],
   selector: 'app-password-policy',

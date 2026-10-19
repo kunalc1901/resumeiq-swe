@@ -20,3 +20,4 @@ Thumbs.db
 .env-*
 
 sq-*.log
+/env/dev.json

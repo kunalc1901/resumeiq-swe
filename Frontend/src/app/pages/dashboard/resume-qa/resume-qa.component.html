@@ -11,6 +11,61 @@
   </app-page-header>
 
   <div class="chat-card dash-card">
+    <!-- Chat toolbar: conversation history + new chat -->
+    <div class="chat-toolbar">
+      <button
+        type="button"
+        class="qa-tool-btn"
+        (click)="toggleHistory()"
+        [attr.aria-expanded]="historyOpen"
+        aria-haspopup="true"
+        title="Conversation history"
+      >
+        <app-icon name="clock" [size]="16" />
+        <span class="qa-tool-label">History</span>
+      </button>
+
+      <button type="button" class="qa-tool-btn accent" (click)="newChat()" title="Start a new chat">
+        <app-icon name="plus" [size]="16" />
+        <span class="qa-tool-label">New chat</span>
+      </button>
+
+      <!-- Older conversations overlay (UI only) -->
+      <div class="qa-history" *ngIf="historyOpen">
+        <div class="qa-history-head">
+          <span class="qa-history-title">Conversation history</span>
+          <button
+            type="button"
+            class="qa-history-close"
+            (click)="closeHistory()"
+            aria-label="Close conversation history"
+          >
+            <app-icon name="x" [size]="14" />
+          </button>
+        </div>
+        <div class="qa-history-list dash-scroll">
+          <button
+            type="button"
+            class="qa-history-item"
+            *ngFor="let c of conversations"
+            [class.active]="c.id === activeConversationId"
+            (click)="selectConversation(c.id)"
+          >
+            <span class="qa-history-icon" aria-hidden="true">
+              <app-icon name="message-square" [size]="15" />
+            </span>
+            <span class="qa-history-main">
+              <span class="qa-history-item-title" [title]="c.title">{{ c.title }}</span>
+              <span class="qa-history-item-time">{{ c.time }}</span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Click-away backdrop for the history overlay -->
+    <div class="qa-history-backdrop" *ngIf="historyOpen" (click)="closeHistory()"></div>
+
     <div class="chat-scroll dash-scroll">
       <div class="chat-message user" *ngFor="let m of userMessages">
         <div class="bubble user-bubble">{{ m.content }}</div>

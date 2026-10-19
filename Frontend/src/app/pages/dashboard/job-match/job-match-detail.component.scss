@@ -62,6 +62,24 @@
   margin-bottom: 14px;
 }
 
+.jm-hero-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.jm-hero-resume strong {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.jm-hero-resume.is-missing span {
+  font-style: italic;
+}
+
 .jm-hero-summary {
   font-size: 14px;
   line-height: 1.65;

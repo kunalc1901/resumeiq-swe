@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { JobMatch } from '../../core/models/job-match.model';
+import { JobMatchSummary } from '../../core/models/job-match.model';
 import { AppIconComponent } from '../app-icon/app-icon.component';
 import { ScoreRingComponent } from '../score-ring/score-ring.component';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.Default,
   standalone: true,
   imports: [CommonModule, RouterLink, AppIconComponent, ScoreRingComponent],
   selector: 'app-job-match-card',
@@ -32,6 +33,13 @@ import { ScoreRingComponent } from '../score-ring/score-ring.component';
       <div class="jm-card-label">
         <app-icon name="target" [size]="13" />
         {{ match.matchLabel }}
+      </div>
+
+      <div class="jm-card-resume" [class.is-missing]="!match.resume">
+        <app-icon name="file-text" [size]="13" />
+        <span class="jm-card-resume-name" [title]="match.resume ? match.resume.fileName : 'This resume is no longer available'">
+          {{ match.resume ? match.resume.fileName : 'Resume unavailable' }}
+        </span>
       </div>
 
       <p class="jm-card-summary">{{ match.job.summary }}</p>
@@ -100,6 +108,23 @@ import { ScoreRingComponent } from '../score-ring/score-ring.component';
         font-weight: 600;
         color: #c7d2fe;
       }
+      .jm-card-resume {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        min-width: 0;
+        max-width: 100%;
+      }
+      .jm-card-resume-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .jm-card-resume.is-missing .jm-card-resume-name {
+        font-style: italic;
+      }
       .jm-card-summary {
         font-size: 13px;
         line-height: 1.6;
@@ -130,5 +155,5 @@ import { ScoreRingComponent } from '../score-ring/score-ring.component';
   ],
 })
 export class JobMatchCardComponent {
-  @Input() match!: JobMatch;
+  @Input() match!: JobMatchSummary;
 }

@@ -58,6 +58,42 @@ const config = convict({
       arg: 'db-srv-record',
       env: 'SQ_DB_SRV_RECORD',
     },
+    username: {
+      doc: 'Database username. Leave empty for unauthenticated connections.',
+      format: String,
+      default: '',
+      arg: 'db-username',
+      env: 'SQ_DB_USERNAME',
+    },
+    password: {
+      doc: 'Database password.',
+      format: String,
+      default: '',
+      sensitive: true,
+      arg: 'db-password',
+      env: 'SQ_DB_PASSWORD',
+    },
+    authSource: {
+      doc: 'Database used to authenticate against (Atlas users live in "admin").',
+      format: String,
+      default: '',
+      arg: 'db-auth-source',
+      env: 'SQ_DB_AUTH_SOURCE',
+    },
+    replicaSet: {
+      doc: 'Replica set name (for Atlas, from the SRV TXT record).',
+      format: String,
+      default: '',
+      arg: 'db-replica-set',
+      env: 'SQ_DB_REPLICA_SET',
+    },
+    tls: {
+      doc: 'Use TLS for the database connection (required by Atlas when not using SRV).',
+      format: Boolean,
+      default: false,
+      arg: 'db-tls',
+      env: 'SQ_DB_TLS',
+    },
   },
   auth: {
     jwtSecret: {

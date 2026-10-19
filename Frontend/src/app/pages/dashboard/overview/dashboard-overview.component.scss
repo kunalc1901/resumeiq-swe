@@ -101,52 +101,6 @@
   flex-wrap: wrap;
 }
 
-/* Insights */
-.insight-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-}
-
-.insight-card {
-  display: flex;
-  flex-direction: column;
-}
-
-.insight-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.insight-title {
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0 0 6px;
-  color: var(--text-primary);
-}
-
-.insight-desc {
-  font-size: 13.5px;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  margin: 0 0 14px;
-  flex: 1;
-}
-
-.insight-link {
-  font-size: 13px;
-  font-weight: 600;
-  color: #a5b4fc;
-  text-decoration: none;
-}
-
-.insight-link:hover {
-  text-decoration: underline;
-}
-
 /* Quick actions */
 .quick-grid {
   display: grid;
@@ -250,14 +204,12 @@
 }
 
 @media (max-width: 1024px) {
-  .insight-grid,
   .quick-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 640px) {
-  .insight-grid,
   .quick-grid {
     grid-template-columns: 1fr;
   }

@@ -14,6 +14,186 @@
   flex-direction: column;
 }
 
+/* ---------- Chat toolbar (history + new chat) ---------- */
+.chat-toolbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.qa-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.qa-tool-btn:hover {
+  color: var(--text-primary);
+  border-color: rgba(129, 140, 248, 0.4);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.qa-tool-btn.accent {
+  color: #c7d2fe;
+  border-color: rgba(129, 140, 248, 0.32);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.16), rgba(139, 92, 246, 0.12));
+}
+
+.qa-tool-btn.accent:hover {
+  color: #e0e7ff;
+  border-color: rgba(129, 140, 248, 0.5);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.26), rgba(139, 92, 246, 0.2));
+}
+
+/* ---------- Conversation history overlay ---------- */
+.qa-history {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 16px;
+  z-index: 70;
+  width: 324px;
+  max-width: calc(100vw - 48px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.6);
+  padding: 8px;
+  animation: qaHistoryIn 0.18s ease both;
+}
+
+@keyframes qaHistoryIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.qa-history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 4px 8px 12px;
+}
+
+.qa-history-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.qa-history-close {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.qa-history-close:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.qa-history-list {
+  max-height: 296px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 2px;
+}
+
+.qa-history-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.qa-history-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+.qa-history-item.active {
+  background: rgba(99, 102, 241, 0.14);
+  color: var(--text-primary);
+}
+
+.qa-history-icon {
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  color: #a5b4fc;
+}
+
+.qa-history-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.qa-history-item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.qa-history-item-time {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.qa-history-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
 .chat-scroll {
   flex: 1;
   min-height: 0;
@@ -275,6 +455,10 @@
   .send-label {
     display: none;
   }
+
+  .qa-history {
+    left: 8px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -283,6 +467,10 @@
   }
 
   .typing-dots span {
+    animation: none;
+  }
+
+  .qa-history {
     animation: none;
   }
 }

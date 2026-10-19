@@ -1,98 +1,16 @@
 import {
   ActivityGroup,
-  Insight,
   InterviewEvaluation,
   InterviewQuestion,
   JobMatchResult,
   ProfileData,
   ResumeAnalysis,
-  ResumeStatus,
-  Stat,
 } from '../models/dashboard.model';
 
 /**
  * Centralized demo data for the ResumeIQ dashboard.
  * Replace with HTTP-backed data via DashboardService once APIs are available.
  */
-
-export const MOCK_RESUME_STATUS: ResumeStatus = {
-  fileName: 'Software_Engineer_Resume.pdf',
-  lastAnalyzed: 'Today',
-  overallScore: 82,
-  atsScore: 78,
-};
-
-export const MOCK_STATS: Stat[] = [
-  {
-    id: 'score',
-    label: 'Overall Resume Score',
-    value: '82',
-    sub: 'out of 100',
-    icon: 'star',
-    tone: 'accent',
-    progress: 82,
-  },
-  {
-    id: 'ats',
-    label: 'ATS Compatibility',
-    value: '78%',
-    sub: 'parses cleanly',
-    icon: 'file-text',
-    tone: 'success',
-    progress: 78,
-  },
-  {
-    id: 'skills',
-    label: 'Skills Identified',
-    value: '24',
-    sub: 'across 3 groups',
-    icon: 'layers',
-    tone: 'info',
-  },
-  {
-    id: 'gaps',
-    label: 'Areas to Improve',
-    value: '6',
-    sub: 'actionable items',
-    icon: 'alert-triangle',
-    tone: 'warn',
-  },
-];
-
-export const MOCK_INSIGHTS: Insight[] = [
-  {
-    id: 'kw',
-    icon: 'search',
-    category: 'Missing Keywords',
-    title: 'Cloud keywords could help',
-    description:
-      'Your resume may benefit from highlighting cloud deployment experience.',
-  },
-  {
-    id: 'strong',
-    icon: 'code',
-    category: 'Strong Skill',
-    title: 'Backend is your strength',
-    description:
-      'Your backend experience is one of the strongest sections of your profile.',
-  },
-  {
-    id: 'improve',
-    icon: 'sparkles',
-    category: 'Resume Improvement',
-    title: 'Make projects more measurable',
-    description:
-      '3 project descriptions could be made more measurable.',
-  },
-  {
-    id: 'structure',
-    icon: 'layers',
-    category: 'Structure',
-    title: 'Good keyword coverage',
-    description:
-      'Your resume uses relevant keywords consistently across sections.',
-  },
-];
 
 export const MOCK_ACTIVITY: ActivityGroup[] = [
   {
